@@ -47,4 +47,11 @@ class CustomTextStyles {
         fontFamily: "Poppins",
         color: theme.colorScheme.primary,
       );
+  static get bodySmallYellow900 => theme.textTheme.bodySmall!.copyWith(
+        color: appTheme.black900,
+      );
+  static get bodySmallIndigo900 => theme.textTheme.bodySmall!.copyWith(
+        color: theme.colorScheme.primary,
+        fontSize: 12.fSize,
+      );
 }

@@ -17,7 +17,7 @@ class ApiBaseHelper {
     var options = BaseOptions(
       receiveTimeout: const Duration(seconds: ApiConstant.TIMEOUT),
       connectTimeout: const Duration(seconds: ApiConstant.TIMEOUT),
-      baseUrl: EnvironmentConstants.setEnvironment(Environment.DEV),
+      baseUrl: EnvironmentConstants.setEnvironment(Environment.PROD),
       responseType: ResponseType.json,
     );
     _dio = Dio(options);
@@ -40,7 +40,7 @@ class ApiBaseHelper {
       //   return await _dio!.post(url, data: data ?? params!);
 
       case 'POST':
-        return await _dio!.post(url, data: data ?? FormData.fromMap(params!)!);
+        return await _dio!.post(url, data: data ?? FormData.fromMap(params!));
 
       case 'PUT':
         return await _dio!.put(url, data: data ?? FormData.fromMap(params!));
@@ -49,7 +49,7 @@ class ApiBaseHelper {
             .delete(url + (params != null ? params.toString() : ''));
       case 'PATCH':
         return await _dio!
-            .patch(url, data: params != null ? FormData.fromMap(params!) : "");
+            .patch(url, data: params != null ? FormData.fromMap(params) : "");
 
       default:
         throw Exception('Unsupported method: $method');

@@ -26,15 +26,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // clearEveryThing();
       print("token = $token");
-      if (token != "") {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ));
-      } else {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const SignInScreen(),
-        ));
-      }
+      // if (token != "") {
+      // Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //   builder: (context) => const HomePage(),
+      // ));
+      // } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const SignInScreen(),
+      ));
+      // }
     });
     super.initState();
   }

@@ -92,21 +92,30 @@ class ApiRepository {
         .execute((response) => response);
   }
 
+  // Future addevent(Map<String, dynamic> params) async {
+  //   return _apiHelper
+  //       .post(ApiConstant.createEvent, params)
+  //       .execute((response) => response);
+  // }
+
   Future addevent(Map<String, dynamic> params) async {
+    String token = await getAccessToken();
     return _apiHelper
-        .post(ApiConstant.createEvent, params)
+        .postWithparamAndauth(ApiConstant.createEvent, params, token)
         .execute((response) => response);
   }
 
-  // Future addevent(Map<String, dynamic> params) async {
-  //   String token = await getAccessToken();
-  //   return _apiHelper
-  //       .postWithparamAndauth(ApiConstant.createEvent, params, token)
-  //       .execute((response) => response);
-  // }
-  Future addproject(Map<String, dynamic> params) async {
+  Future addtrip(Map<String, dynamic> params) async {
+    String token = await getAccessToken();
     return _apiHelper
-        .post(ApiConstant.createProject, params)
+        .postWithparamAndauth(ApiConstant.createTrip, params, token)
+        .execute((response) => response);
+  }
+
+  Future addproject(Map<String, dynamic> params) async {
+    String token = await getAccessToken();
+    return _apiHelper
+        .postWithparamAndauth(ApiConstant.createProject, params, token)
         .execute((response) => response);
   }
 }

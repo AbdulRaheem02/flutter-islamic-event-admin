@@ -52,6 +52,19 @@ class InitialStatusController extends GetxController {
     });
   }
 
+  void addTrip(Map<String, dynamic> params) {
+    EasyLoading.show();
+
+    apiRepository.addtrip(params).getResponse((reponse) {
+      EasyLoading.dismiss();
+
+      print("response${reponse.statusCode}");
+      if (reponse.statusCode == 200) {
+        flutterToast("${reponse.data['message']}");
+      }
+    });
+  }
+
   void addProject(Map<String, dynamic> params) {
     EasyLoading.show();
 

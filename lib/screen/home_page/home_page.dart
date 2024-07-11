@@ -39,14 +39,19 @@ class _EventPageScreenState extends State<EventPageScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController titleController = TextEditingController();
+  TextEditingController organizerNameController = TextEditingController();
+
   TextEditingController startDateController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+
   final List<File> _images = [];
   var images = [];
   final picker = ImagePicker();
   File? _video;
+  File? _image;
 
   Future getImage(ImageSource source, bool isvideo) async {
     if (isvideo) {
@@ -152,6 +157,16 @@ class _EventPageScreenState extends State<EventPageScreen> {
   TimeOfDay? _startTime;
   DateTime? _endDate;
   TimeOfDay? _endTime;
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   // Future<void> _selectDate(BuildContext context, bool isStart) async {
   //   final DateTime? picked = await showDatePicker(
@@ -191,24 +206,6 @@ class _EventPageScreenState extends State<EventPageScreen> {
     }
     return selectdate!;
   }
-  // Future<void> _selectTime(BuildContext context, bool isStart) async {
-  //   final TimeOfDay? picked = await showTimePicker(
-  //     context: context,
-  //     // initialEntryMode: TimePickerEntryMode.input,
-  //     initialTime: TimeOfDay.now(),
-  //   );
-  //   if (picked != null) {
-  //     setState(() {
-  //       if (isStart) {
-  //         _startTime = picked;
-  //         startTimeController.text = _formatTime(_startTime!);
-  //       } else {
-  //         _endTime = picked;
-  //         endTimeController.text = _formatTime(_endTime!);
-  //       }
-  //     });
-  //   }
-  // }
 
   Future<String> _selectTime(BuildContext context) async {
     TimeOfDay selectedTime = TimeOfDay.now();
@@ -238,6 +235,10 @@ class _EventPageScreenState extends State<EventPageScreen> {
     return DateFormat('yyyy-MM-dd').format(date);
   }
 
+  bool isEvent = true;
+  bool isTrip = false;
+  bool isProject = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,8 +252,108 @@ class _EventPageScreenState extends State<EventPageScreen> {
               horizontal: 20.h,
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 15.v),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      height: 40.v,
+                      width: MediaQuery.of(context).size.width * 0.28,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.v),
+                          border: Border.all(
+                              color: isEvent
+                                  ? theme.colorScheme.primary
+                                  : appTheme.black900)),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isEvent = true;
+                            isProject = false;
+                            isTrip = false;
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Event",
+                              style: isEvent
+                                  ? CustomTextStyles.bodySmallIndigo900
+                                  : CustomTextStyles.bodySmallYellow900,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 40.v,
+                      width: MediaQuery.of(context).size.width * 0.28,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.v),
+                          border: Border.all(
+                              color: isProject
+                                  ? theme.colorScheme.primary
+                                  : appTheme.black900)),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isEvent = false;
+                            isProject = true;
+                            isTrip = false;
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Project",
+                              style: isProject
+                                  ? CustomTextStyles.bodySmallIndigo900
+                                  : CustomTextStyles.bodySmallYellow900,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 40.v,
+                      width: MediaQuery.of(context).size.width * 0.28,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.v),
+                          border: Border.all(
+                              color: isTrip
+                                  ? theme.colorScheme.primary
+                                  : appTheme.black900)),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isEvent = false;
+                            isProject = false;
+                            isTrip = true;
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Trip",
+                              style: isTrip
+                                  ? CustomTextStyles.bodySmallIndigo900
+                                  : CustomTextStyles.bodySmallYellow900,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
                     padding: EdgeInsets.only(left: 1.h, top: 7, bottom: 7),
                     child: Row(
@@ -315,13 +416,84 @@ class _EventPageScreenState extends State<EventPageScreen> {
 
                 _addImage(context),
                 SizedBox(height: 15.v),
+                CustomTextFormField(
+                  controller: organizerNameController,
+                  hintText: "Enter Organizer Name",
+                  hintStyle: CustomTextStyles.bodySmall10,
+                  textInputType: TextInputType.text,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter organizer name';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 15.v),
+
+                Row(
+                  children: [
+                    _image == null
+                        ? Container(
+                            width: 140.v,
+                            height: 100.h,
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.v),
+                                color: appTheme.lightbackground),
+                          )
+                        : Container(
+                            width: 140.v,
+                            height: 190.h,
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.v),
+                                color: appTheme.lightbackground),
+                            child: Image.file(
+                              _image!,
+                              height: 100.h,
+                              width: 200,
+                            ),
+                          ),
+                    TextButton(
+                        onPressed: () {
+                          _pickImage();
+                        },
+                        child: const Text("Add Organizer Image")),
+                  ],
+                ),
+                SizedBox(height: 15.v),
 
                 CustomTextFormField(
-                    controller: titleController,
-                    hintText: "Title",
-                    hintStyle: CustomTextStyles.bodySmall10,
-                    textInputType: TextInputType.text),
+                  controller: titleController,
+                  hintText: "Title",
+                  hintStyle: CustomTextStyles.bodySmall10,
+                  textInputType: TextInputType.text,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter title';
+                    }
+                    return null;
+                  },
+                ),
                 SizedBox(height: 15.v),
+                if (isEvent || isTrip)
+                  Column(
+                    children: [
+                      CustomTextFormField(
+                        controller: priceController,
+                        hintText: "Price",
+                        hintStyle: CustomTextStyles.bodySmall10,
+                        textInputType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter price';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 15.v),
+                    ],
+                  ),
                 InkWell(
                   onTap: () async {
                     // _selectDate(context, true);
@@ -330,10 +502,17 @@ class _EventPageScreenState extends State<EventPageScreen> {
                   child: IgnorePointer(
                     ignoring: true,
                     child: CustomTextFormField(
-                        controller: startDateController,
-                        hintText: "Start Date",
-                        hintStyle: CustomTextStyles.bodySmall10,
-                        textInputType: TextInputType.number),
+                      controller: startDateController,
+                      hintText: "Start Date",
+                      hintStyle: CustomTextStyles.bodySmall10,
+                      textInputType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select start date';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                 ),
                 SizedBox(height: 15.v),
@@ -345,10 +524,17 @@ class _EventPageScreenState extends State<EventPageScreen> {
                   child: IgnorePointer(
                     ignoring: true,
                     child: CustomTextFormField(
-                        controller: startTimeController,
-                        hintText: "Start Time",
-                        hintStyle: CustomTextStyles.bodySmall10,
-                        textInputType: TextInputType.number),
+                      controller: startTimeController,
+                      hintText: "Start Time",
+                      hintStyle: CustomTextStyles.bodySmall10,
+                      textInputType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select start time';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                 ),
                 SizedBox(height: 15.v),
@@ -360,10 +546,17 @@ class _EventPageScreenState extends State<EventPageScreen> {
                   child: IgnorePointer(
                     ignoring: true,
                     child: CustomTextFormField(
-                        controller: endTimeController,
-                        hintText: "End Time",
-                        hintStyle: CustomTextStyles.bodySmall10,
-                        textInputType: TextInputType.number),
+                      controller: endTimeController,
+                      hintText: "End Time",
+                      hintStyle: CustomTextStyles.bodySmall10,
+                      textInputType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select end time';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                 ),
                 SizedBox(height: 15.v),
@@ -398,9 +591,15 @@ class _EventPageScreenState extends State<EventPageScreen> {
                 CustomTextFormField(
                   maxLines: 7,
                   controller: descriptionController,
-                  hintText: "Enter Detail About Event",
+                  hintText: "Enter Detail About",
                   hintStyle: CustomTextStyles.bodySmall10,
                   textInputType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please add about detail';
+                    }
+                    return null;
+                  },
                 ),
                 // Expanded(
                 //   child: ListView.builder(
@@ -455,29 +654,52 @@ class _EventPageScreenState extends State<EventPageScreen> {
               videos = [video];
             }
             if (images.isNotEmpty) {
-              _initialStatusController.addEvent({
-                "title": titleController.text,
-                "date": startDateController.text,
-                "startTime":
-                    // startTimeController.text,
-                    "${startDateController.text} ${startTimeController.text}",
-                "endTime":
-                    // endTimeController.text,
-                    "${startDateController.text} ${endTimeController.text}",
-                "lat": _initialStatusController.latitude,
-                "long": _initialStatusController.longitude,
-                "location":
-                    _initialStatusController.locationEditTextController.text,
-                "about": descriptionController.text,
-                "pictures": images,
-                "videos": videos,
-              });
+              if (_image != null) {
+                var fileBookImage = _image!.path.split('/').last;
+                var fileimage = await Deo.MultipartFile.fromFile(
+                  _image!.path,
+                  filename: fileBookImage,
+                );
+                Map<String, dynamic> params = {
+                  "title": titleController.text,
+                  "date": startDateController.text,
+                  "startTime":
+                      // startTimeController.text,
+                      "${startDateController.text} ${startTimeController.text}",
+                  "endTime":
+                      // endTimeController.text,
+                      "${startDateController.text} ${endTimeController.text}",
+                  "lat": _initialStatusController.latitude,
+                  "long": _initialStatusController.longitude,
+                  "location":
+                      _initialStatusController.locationEditTextController.text,
+                  "about": descriptionController.text,
+                  "pictures": images,
+                  "videos": videos,
+                  "organiserName": organizerNameController.text,
+                  "organiserPic": fileimage,
+                  "price": priceController.text
+                };
+                if (isEvent) {
+                  _initialStatusController.addEvent(params);
+                } else if (isProject) {
+                  _initialStatusController.addProject(params);
+                } else if (isTrip) {
+                  _initialStatusController.addTrip(params);
+                }
+              } else {
+                Fluttertoast.showToast(msg: "Add Organizer image");
+              }
             } else {
               Fluttertoast.showToast(msg: "AtLeast add one image");
             }
           }
         },
-        text: "Add Event",
+        text: isEvent
+            ? "Add Event"
+            : isProject
+                ? "Add Project"
+                : "Add Trip",
         buttonTextStyle: CustomTextStyles.bodySmallOnPrimary,
         margin: EdgeInsets.only(left: 21.h, right: 20.h, bottom: 21.v));
   }
@@ -716,7 +938,7 @@ class _EventPageScreenState extends State<EventPageScreen> {
       leadingWidth: 40.h,
       centerTitle: true,
       title: AppbarTitle(
-        text: "Event",
+        text: isEvent ? "Event" : "Project",
       ),
       styleType: Style.bgFill,
     );

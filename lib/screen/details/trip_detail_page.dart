@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:islamic_event_admin/core/app_export.dart';
 import 'package:islamic_event_admin/theme/theme_helper.dart';
 import 'package:islamic_event_admin/widgets/custom_image_view.dart';
@@ -9,48 +8,19 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:intl/intl.dart';
 
+import '../../api-handler/env_constants.dart';
 import '../../controller/initialStatuaController.dart';
-import '../../model/ProjectModel.dart';
-import '../VideoPlayer/video_player_screen.dart';
+import '../../model/EventModel.dart';
 import '../home_page/home_page.dart';
-import 'package:path_provider/path_provider.dart';
 
-class DonationDetailScreen extends StatefulWidget {
-  ProjectModel project;
-  DonationDetailScreen({required this.project, super.key});
-
-  @override
-  State<DonationDetailScreen> createState() => _DonationDetailScreenState();
-}
-
-class _DonationDetailScreenState extends State<DonationDetailScreen> {
-  String thumbnail = "";
+class TripDetailScreen extends StatelessWidget {
+  EventModel eventdetail;
+  TripDetailScreen({required this.eventdetail, super.key});
 
   final InitialStatusController _initialStatusController =
       Get.find<InitialStatusController>();
-  Future<void> generateThumbnail(String videourl) async {
-    final directory = await getTemporaryDirectory();
-    final thumbnailPath = await VideoThumbnail.thumbnailFile(
-      video: videourl,
-      thumbnailPath: directory.path,
-      imageFormat: ImageFormat.JPEG,
-      maxHeight: 150,
-      quality: 50,
-    );
-    thumbnail = thumbnailPath.toString();
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    generateThumbnail(
-        "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4");
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,63 +43,58 @@ class _DonationDetailScreenState extends State<DonationDetailScreen> {
                 //     fit: BoxFit.cover,
                 //   ),
                 // ),
-                thumbnail != ""
-                    ? GestureDetector(
-                        onTap: () {
-                          print("asdf");
-                          Get.to(() => VideoPlay(
-                                link:
-                                    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-                              ));
-                        },
-                        child: Container(
-                          height: 244.h,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.1),
-                            image: DecorationImage(
-                              image:
-                                  FileImage(File(thumbnail)), // Use FileImage
+                SizedBox(
+                  height: 244.h,
+                  width: double.infinity,
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      height: double
+                          .infinity, // Ensure the carousel itself takes full height
+                      viewportFraction: 1.0, // Each item takes full width
+                      autoPlay: true,
+                      // Add other CarouselOptions if needed
+                    ),
+                    items: eventdetail.images
+                        .map(
+                          (item) => Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(
+                                      0.3), // Adjust opacity as needed
+                                ],
+                              ),
+                            ),
+                            // height: 244.h,
+                            child: CustomImageView(
+                              imagePath:
+                                  "${EnvironmentConstants.baseUrlforimage}$item",
                               fit: BoxFit.cover,
                             ),
                           ),
-                          child: Center(
-                              child: Container(
-                            decoration: BoxDecoration(
-                                color: appTheme.white.withOpacity(0.5),
-                                shape: BoxShape.circle),
-                            child: Icon(
-                              Icons.play_arrow,
-                              color: theme.colorScheme.primary,
-                              size: 40.h,
-                            ),
-                          )),
-                        ))
-                    : const Center(child: CircularProgressIndicator()),
-                GestureDetector(
-                  onTap: () {
-                    print("asdf");
-                    Get.to(() => VideoPlay(
-                          link:
-                              "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-                        ));
-                  },
-                  child: Container(
-                    height: 244.h,
-
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black
-                              .withOpacity(0.3), // Adjust opacity as needed
-                        ],
-                      ),
-                    ), // Adjust opacity as needed
+                        )
+                        .toList(),
                   ),
                 ),
+
+                // Container(
+                //   height: 244.h,
+
+                //   decoration: BoxDecoration(
+                //     gradient: LinearGradient(
+                //       begin: Alignment.topCenter,
+                //       end: Alignment.topCenter,
+                //       colors: [
+                //         Colors.transparent,
+                //         Colors.black
+                //             .withOpacity(0.3), // Adjust opacity as needed
+                //       ],
+                //     ),
+                //   ), // Adjust opacity as needed
+                // ),
                 Padding(
                   padding: EdgeInsets.only(top: 30.h),
                   child: IconButton(
@@ -141,7 +106,6 @@ class _DonationDetailScreenState extends State<DonationDetailScreen> {
                         color: appTheme.white,
                       )),
                 ),
-
                 Positioned(
                     bottom: 0,
                     left: 40,
@@ -239,7 +203,8 @@ class _DonationDetailScreenState extends State<DonationDetailScreen> {
                   SizedBox(
                     width: 320.v,
                     child: Text(
-                      widget.project.title,
+                      // "International Band Music Concert",
+                      eventdetail.title,
                       overflow: TextOverflow.clip,
                       style: TextStyle(
                         fontSize: 30.v,
@@ -252,19 +217,18 @@ class _DonationDetailScreenState extends State<DonationDetailScreen> {
                 ],
               ),
               SizedBox(height: 15.h),
-              // EventDetailWidget(
-              //   icon: ImageConstant.calendaricon,
-              // title: _initialStatusController
-              //       .formatDate(DateTime.parse(widget. project.startTime)),
-              //   des:
-              //       "${DateFormat('EEEE').format(DateTime.parse(eventdetail.startTime))}  ${DateFormat.jm().format(DateTime.parse(eventdetail.startTime))} - ${DateFormat.jm().format(DateTime.parse(eventdetail.endTime))}",
-
-              // ),
+              EventDetailWidget(
+                icon: ImageConstant.calendaricon,
+                title: _initialStatusController
+                    .formatDate(DateTime.parse(eventdetail.startTime)),
+                des:
+                    "${DateFormat('EEEE').format(DateTime.parse(eventdetail.startTime))}  ${DateFormat.jm().format(DateTime.parse(eventdetail.startTime))} - ${DateFormat.jm().format(DateTime.parse(eventdetail.endTime))}",
+              ),
               SizedBox(height: 15.h),
               EventDetailWidget(
                 icon: ImageConstant.location,
-                title: 'Gala Convention Center',
-                des: '36 Guild Street London, UK ',
+                title: eventdetail.location,
+                des: '',
               ),
               SizedBox(height: 15.h),
               Row(
@@ -288,7 +252,7 @@ class _DonationDetailScreenState extends State<DonationDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Ashfak",
+                        eventdetail.organiserId.fullname,
                         style: TextStyle(
                           fontSize: 16.v,
                           color: appTheme.blackText,
@@ -323,7 +287,7 @@ class _DonationDetailScreenState extends State<DonationDetailScreen> {
               SizedBox(
                 width: 330.v,
                 child: Text(
-                  "Lorem ipsum dolor sit amet consectetur. Dictum mauris.",
+                  eventdetail.about,
                   style: TextStyle(
                     fontSize: 14.v,
                     color: appTheme.black900.withOpacity(0.6),

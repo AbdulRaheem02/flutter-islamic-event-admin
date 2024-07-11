@@ -17,11 +17,9 @@ class EnvironmentConstants {
   static String setEnvironment(Environment env) {
     switch (env) {
       case Environment.PROD:
-        _config = "http://51.20.114.124:5050/api/v1/";
-        socket = "http://51.20.114.124:5050";
-
-        baseUrlforimage =
-            "https://pakprintwishes-main.s3.ap-south-1.amazonaws.com";
+        socket = "https://f66468x0-5050.inc1.devtunnels.ms/";
+        _config = "https://f66468x0-5050.inc1.devtunnels.ms/api/v1/";
+        baseUrlforimage = "https://f66468x0-5050.inc1.devtunnels.ms";
         break;
       case Environment.STAGING:
         _config = "https://jsonplaceholder.typicode.com/";

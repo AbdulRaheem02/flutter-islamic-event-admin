@@ -22,6 +22,7 @@ class ApiConstant {
   static const createBook = "createBook";
   static const createEvent = "createEvent";
   static const createProject = "createProject";
+  static const createTrip = "createTrip";
 
   static const createMember = "createMember";
 }

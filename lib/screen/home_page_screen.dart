@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         children: const <Widget>[
           EventPageScreen(),
           AddMentor(),
-          ProjectsScreen(),
+          // ProjectsScreen(),
           BooksScreen(),
         ],
         onPageChanged: (index) {
@@ -110,23 +110,23 @@ class _HomePageState extends State<HomePage> {
               ),
               label: 'Mentor',
             ),
-            BottomNavigationBarItem(
-              icon: ColorFiltered(
-                colorFilter: _selectedIndex == 2
-                    ? ColorFilter.mode(
-                        theme.colorScheme.primary, BlendMode.srcIn)
-                    : const ColorFilter.mode(
-                        Color.fromARGB(255, 160, 162, 165), BlendMode.srcIn),
-                child: CustomImageView(
-                  imagePath: ImageConstant.projects,
-                  // height: height * 0.02,
-                  height: height * 0.04,
+            // BottomNavigationBarItem(
+            //   icon: ColorFiltered(
+            //     colorFilter: _selectedIndex == 2
+            //         ? ColorFilter.mode(
+            //             theme.colorScheme.primary, BlendMode.srcIn)
+            //         : const ColorFilter.mode(
+            //             Color.fromARGB(255, 160, 162, 165), BlendMode.srcIn),
+            //     child: CustomImageView(
+            //       imagePath: ImageConstant.projects,
+            //       // height: height * 0.02,
+            //       height: height * 0.04,
 
-                  width: width * 0.06,
-                ),
-              ),
-              label: 'Projects',
-            ),
+            //       width: width * 0.06,
+            //     ),
+            //   ),
+            //   label: 'Projects',
+            // ),
             BottomNavigationBarItem(
               icon: ColorFiltered(
                 colorFilter: _selectedIndex == 3

@@ -131,6 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               _authController.login({
                                 "email": emailController.text,
                                 "password": passwordController.text,
+                                "role": "Admin"
                               });
                             }
                           },
