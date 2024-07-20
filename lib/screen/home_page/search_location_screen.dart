@@ -106,6 +106,7 @@ class _PlacesSearchScreenState extends State<PlacesSearchScreen> {
               onTap: () async {
                 String? currentAddress;
                 Position? currentPosition;
+                EasyLoading.show();
                 currentPosition = await LocationHandler.getCurrentPosition();
                 currentAddress = await LocationHandler.getAddressFromLatLng(
                     currentPosition!);
@@ -122,6 +123,8 @@ class _PlacesSearchScreenState extends State<PlacesSearchScreen> {
                     '${place.street},${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
                 print(_initialStatusController.locationEditTextController.text);
                 print(place);
+                EasyLoading.dismiss();
+
                 Get.back();
                 // await _getCurrentLocation();
               },

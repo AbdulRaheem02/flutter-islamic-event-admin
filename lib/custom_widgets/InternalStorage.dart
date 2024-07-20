@@ -1,6 +1,4 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 //////////// Get and Set and clear Access Token //////////////
 Future<String> getAccessToken() async {
@@ -42,36 +40,36 @@ void saveonboard() async {
 // Future<void> saveUserProfile(UserProfile userProfile) async {
 //   final prefs = await SharedPreferences.getInstance();
 //   final userProfileJson = userProfile.toJson();
-//   print("befor save ${userProfileJson}");
+//   Get.log("befor save ${userProfileJson}");
 //   await prefs.setString(_key, userProfile.toString());
-//   print("save");
+//   Get.log("save");
 // }
 
 // // Retrieve UserProfile from local storage
 // Future<UserProfile?> getUserProfile() async {
-//   print("save get");
+//   Get.log("save get");
 
 //   final prefs = await SharedPreferences.getInstance();
 //   final userProfileJson = prefs.getString(_key);
-//   print("save ${userProfileJson}");
-//   print("save skdn ${userProfileJson != null}");
-//   print("save skdn as${userProfileJson!.isNotEmpty}");
+//   Get.log("save ${userProfileJson}");
+//   Get.log("save skdn ${userProfileJson != null}");
+//   Get.log("save skdn as${userProfileJson!.isNotEmpty}");
 
 //   if (userProfileJson.toString() != "null" && userProfileJson.isNotEmpty) {
 //     try {
       
 //       final Map<String, dynamic> userProfileMap = json.decode(userProfileJson);
-//       print("save userProfileMap${userProfileMap}");
+//       Get.log("save userProfileMap${userProfileMap}");
 
 //       UserProfile userdata = UserProfile.fromJson(userProfileMap);
-//       print("save userdata= ${userdata}");
+//       Get.log("save userdata= ${userdata}");
 //       return UserProfile.fromJson(userProfileMap);
 //     } catch (e) {
-//       print(' save Error decoding user profile JSON: $e');
+//       Get.log(' save Error decoding user profile JSON: $e');
 //       return null;
 //     }
 //   } else {
-//     print('save User profile JSON is empty or null');
+//     Get.log('save User profile JSON is empty or null');
 //     return null;
 //   }
 // }

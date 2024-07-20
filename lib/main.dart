@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +11,7 @@ import 'system-util/display_mode_util.dart';
 import 'system-util/initial_setup.dart';
 import 'theme/theme_helper.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 // var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
@@ -17,7 +20,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-
+  webViewSetting();
   setIntialSetup();
   setHighRefreshRate();
 
@@ -26,6 +29,29 @@ Future<void> main() async {
   configLoading();
 
   runApp(const MyApp());
+}
+
+webViewSetting() async {
+  if (Platform.isAndroid) {
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+
+    var swAvailable = await AndroidWebViewFeature.isFeatureSupported(
+        AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
+    var swInterceptAvailable = await AndroidWebViewFeature.isFeatureSupported(
+        AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
+
+    if (swAvailable && swInterceptAvailable) {
+      AndroidServiceWorkerController serviceWorkerController =
+          AndroidServiceWorkerController.instance();
+
+      await serviceWorkerController
+          .setServiceWorkerClient(AndroidServiceWorkerClient(
+        shouldInterceptRequest: (request) async {
+          return null;
+        },
+      ));
+    }
+  }
 }
 
 void configLoading() {

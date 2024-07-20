@@ -25,9 +25,46 @@ class ApiRepository {
         .execute((response) => response);
   }
 
+  Future getalltrip() async {
+    return _apiHelper
+        .get(ApiConstant.getAllTrips)
+        .execute((response) => response);
+  }
+
+  Future getallbooks() async {
+    return _apiHelper
+        .get(ApiConstant.getAllBooks)
+        .execute((response) => response);
+  }
+
+  Future getallnotification() async {
+    String token = await getAccessToken();
+    return _apiHelper
+        .getWithauthParamUrl(ApiConstant.getAllNotifications, token)
+        .execute((response) => response);
+  }
+
+  Future getallmentors() async {
+    return _apiHelper
+        .get(ApiConstant.getAllMentor)
+        .execute((response) => response);
+  }
+
   Future geteventById({required String eventId}) async {
     return _apiHelper
         .getWithParamUrl(ApiConstant.getEventById, "/$eventId")
+        .execute((response) => response);
+  }
+
+  Future getbookById({required String bookId}) async {
+    return _apiHelper
+        .getWithParamUrl(ApiConstant.getBookById, "/$bookId")
+        .execute((response) => response);
+  }
+
+  Future gettripById({required String tripId}) async {
+    return _apiHelper
+        .getWithParamUrl(ApiConstant.getTripById, "/$tripId")
         .execute((response) => response);
   }
 
@@ -79,6 +116,38 @@ class ApiRepository {
         .execute((response) => response);
   }
 
+  Future getprofiledetail() async {
+    String token = await getAccessToken();
+    return _apiHelper
+        .getwithauthwithoutparam(ApiConstant.getprofiledetail, token)
+        .execute((response) => response);
+  }
+
+  Future createuser(Map<String, dynamic> params) async {
+    return _apiHelper
+        .post(
+          ApiConstant.createCustomer,
+          params,
+        )
+        .execute((response) => response);
+  }
+
+  Future payment(Map<String, dynamic> params) async {
+    return _apiHelper
+        .post(
+          ApiConstant.payment,
+          params,
+        )
+        .execute((response) => response);
+  }
+
+  Future going(Map<String, dynamic> params) async {
+    String token = await getAccessToken();
+    return _apiHelper
+        .postWithparamAndauth(ApiConstant.userGoing, params, token)
+        .execute((response) => response);
+  }
+
   //admin
   Future addbook(Map<String, dynamic> params) async {
     return _apiHelper
@@ -116,6 +185,36 @@ class ApiRepository {
     String token = await getAccessToken();
     return _apiHelper
         .postWithparamAndauth(ApiConstant.createProject, params, token)
+        .execute((response) => response);
+  }
+
+  Future deleteEvent(String id) async {
+    return _apiHelper
+        .patchWithAdditionalUrl(ApiConstant.deleteEvent, "/$id")
+        .execute((response) => response);
+  }
+
+  Future deleteTrip(String id) async {
+    return _apiHelper
+        .patchWithAdditionalUrl(ApiConstant.deleteTrip, "/$id")
+        .execute((response) => response);
+  }
+
+  Future deleteProject(String id) async {
+    return _apiHelper
+        .patchWithAdditionalUrl(ApiConstant.deleteProject, "/$id")
+        .execute((response) => response);
+  }
+
+  Future deleteMentor(String id) async {
+    return _apiHelper
+        .patchWithAdditionalUrl(ApiConstant.deleteMentor, "/$id")
+        .execute((response) => response);
+  }
+
+  Future deleteBook(String id) async {
+    return _apiHelper
+        .patchWithAdditionalUrl(ApiConstant.deleteBook, "/$id")
         .execute((response) => response);
   }
 }

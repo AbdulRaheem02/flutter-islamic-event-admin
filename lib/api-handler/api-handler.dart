@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:islamic_event_admin/constant/api_constants.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'env_constants.dart';
 import 'logging_interceptor.dart';
 
@@ -32,7 +33,7 @@ class ApiBaseHelper {
     if (auth != null) {
       _dio?.options.headers["Authorization"] = "Bearer $auth";
     }
-    print("params ${params}");
+    Get.log("params ${params}");
     switch (method) {
       case 'GET':
         return await _dio!.get(url, queryParameters: params);
@@ -80,9 +81,8 @@ class ApiBaseHelper {
       _request('POST', url, params: params, auth: auth);
   Future<Response> getWithParamUrl(String url, String additionalUrl) =>
       _request('GET', url + additionalUrl);
-  Future<Response> getWithauthParamUrl(
-          String url, String additionalUrl, String auth) =>
-      _request('GET', url + additionalUrl, auth: auth);
+  Future<Response> getWithauthParamUrl(String url, String auth) =>
+      _request('GET', url, auth: auth);
   Future<Response> postWithAdditionalUrl(
           String url, Map<String, dynamic> params, String additionURL) =>
       _request('POST', url + additionURL, params: params);

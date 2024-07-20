@@ -1,7 +1,13 @@
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:islamic_event_admin/core/app_export.dart';
+import 'package:islamic_event_admin/model/ProjectModel.dart';
+import 'package:islamic_event_admin/screen/VideoPlayer/video_player_screen.dart';
 import 'package:islamic_event_admin/theme/theme_helper.dart';
+import 'package:islamic_event_admin/widgets/app_bar/appbar_leading_image.dart';
+import 'package:islamic_event_admin/widgets/app_bar/custom_app_bar.dart';
+import 'package:islamic_event_admin/widgets/custom_elevated_button.dart';
 import 'package:islamic_event_admin/widgets/custom_image_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,286 +15,242 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:intl/intl.dart';
 
+import '../../api-handler/env_constants.dart';
 import '../../controller/initialStatuaController.dart';
-import '../../model/ProjectModel.dart';
-import '../VideoPlayer/video_player_screen.dart';
+import '../../model/EventModel.dart';
+import '../../widgets/app_bar/appbar_title.dart';
 import '../home_page/home_page.dart';
-import 'package:path_provider/path_provider.dart';
 
-class DonationDetailScreen extends StatefulWidget {
-  ProjectModel project;
-  DonationDetailScreen({required this.project, super.key});
+class ProjectDetailScreen extends StatefulWidget {
+  ProjectModel projectdetail;
+  ProjectDetailScreen({required this.projectdetail, super.key});
 
   @override
-  State<DonationDetailScreen> createState() => _DonationDetailScreenState();
+  State<ProjectDetailScreen> createState() => _DetailScreenState();
 }
 
-class _DonationDetailScreenState extends State<DonationDetailScreen> {
-  String thumbnail = "";
-
+class _DetailScreenState extends State<ProjectDetailScreen> {
   final InitialStatusController _initialStatusController =
       Get.find<InitialStatusController>();
-  Future<void> generateThumbnail(String videourl) async {
-    final directory = await getTemporaryDirectory();
-    final thumbnailPath = await VideoThumbnail.thumbnailFile(
-      video: videourl,
-      thumbnailPath: directory.path,
-      imageFormat: ImageFormat.JPEG,
-      maxHeight: 150,
-      quality: 50,
-    );
-    thumbnail = thumbnailPath.toString();
-    setState(() {});
-  }
+  late List<dynamic> mediaItems;
 
   @override
   void initState() {
-    generateThumbnail(
-        "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4");
-    // TODO: implement initState
     super.initState();
+    // Combine images and videos into a single list
+    mediaItems = [
+      ...widget.projectdetail.images,
+      ...widget.projectdetail.videos!
+    ];
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return CustomAppBar(
+      leadingWidth: 40.h,
+      leading: AppbarLeadingImage(
+        imagePath: ImageConstant.back,
+        onTap: () {
+          Get.back();
+        },
+        margin: EdgeInsets.only(
+          left: 21.h,
+          top: 14.v,
+          bottom: 14.v,
+        ),
+      ),
+      centerTitle: true,
+      title: AppbarTitle(
+        text: "Project Details",
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        SizedBox(
-          width: double.maxFinite,
-          height: 274.h,
-          // color: Colors.amber,
-          child: SizedBox(
-            width: double.maxFinite,
-            height: 244.h,
-            // decoration: BoxDecoration(color: theme.colorScheme.primary),
-            child: Stack(
+        appBar: _buildAppBar(context),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // SizedBox(
-                //   height: 244.h,
-                //   child: CustomImageView(
-                //     imagePath: ImageConstant.event,
-                //     fit: BoxFit.cover,
-                //   ),
-                // ),
-                thumbnail != ""
-                    ? GestureDetector(
-                        onTap: () {
-                          print("asdf");
-                          Get.to(() => VideoPlay(
-                                link:
-                                    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-                              ));
-                        },
-                        child: Container(
-                          height: 244.h,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.1),
-                            image: DecorationImage(
-                              image:
-                                  FileImage(File(thumbnail)), // Use FileImage
+                CarouselSlider(
+                  options: CarouselOptions(
+                    viewportFraction: 1.0,
+                    // aspectRatio:   25 / 12,
+
+                    // Other options...
+                  ),
+                  items: mediaItems.map((imagePath) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        Get.log(imagePath);
+                        // Determine if the current item is a video
+                        bool isVideo = imagePath.endsWith(".mp4") ||
+                            imagePath.endsWith(".mkv") ||
+                            imagePath.endsWith(".webm") ||
+                            imagePath.endsWith(".MOV");
+                        Get.log("is video $isVideo");
+                        if (isVideo) {
+                          _initialStatusController
+                              .generateThumbnail(
+                                  "${EnvironmentConstants.baseUrlforimage}$imagePath")
+                              .then((value) {});
+                          Get.log(
+                              "thumbnial ${_initialStatusController.thumbnail}");
+
+                          return Obx(() => GestureDetector(
+                              onTap: () {
+                                Get.log("tap");
+                                Get.to(() => VideoPlay(
+                                      link:
+                                          "${EnvironmentConstants.baseUrlforimage}$imagePath",
+                                    ));
+                              },
+                              child: Container(
+                                height: 200.h,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: appTheme.blueGray400,
+                                  image: DecorationImage(
+                                    image: FileImage(File(
+                                        _initialStatusController
+                                            .thumbnail.value)), // Use FileImage
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                child: Center(
+                                    child: Icon(
+                                  Icons.play_arrow,
+                                  color: theme.colorScheme.primary,
+                                  size: 40.h,
+                                )),
+                              )));
+                        } else {
+                          // If it's not a video, display the image as before
+                          return CustomImageView(
+                            onTap: () {
+                              Get.log(
+                                  "${EnvironmentConstants.baseUrlforimage}$imagePath");
+                              // Get.to(() => ImageViewer(
+                              //     imageUrl:
+                              //         "${EnvironmentConstants.baseUrlforimage}${imagePath}"));
+                            },
+                            imagePath:
+                                "${EnvironmentConstants.baseUrlforimage}$imagePath",
+                            height: 182.v,
+                            fit: BoxFit.cover,
+                            width: 319.h,
+                            radius: BorderRadius.circular(5.h),
+                          );
+                        }
+                      },
+                    );
+                  }).toList(),
+                ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                Container(
+                  // width: 320.v,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.h,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 30.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 320.v,
+                            child: Text(
+                              // "International Band Music Concert",
+                              widget.projectdetail.title,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                fontSize: 30.v,
+                                color: appTheme.blackText,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15.h),
+                      EventDetailWidget(
+                          icon: ImageConstant.calendaricon,
+                          title: _initialStatusController.parseAndFormatDate(
+                              widget.projectdetail.startTime.toString()),
+                          des: _initialStatusController.formatDateTime(
+                              _initialStatusController.parseDateTime(
+                                  widget.projectdetail.startTime),
+                              _initialStatusController
+                                  .parseDateTime(widget.projectdetail.endTime))
+
+                          // "${DateFormat('EEEE').format(DateTime.parse(projectdetail.startTime))}  ${DateFormat.jm().format(DateTime.parse(projectdetail.startTime))} - ${DateFormat.jm().format(DateTime.parse(projectdetail.endTime))}",
+                          ),
+                      SizedBox(height: 15.h),
+                      EventDetailWidget(
+                        icon: ImageConstant.location,
+                        title: widget.projectdetail.location,
+                        des: '',
+                      ),
+                      SizedBox(height: 15.h),
+                      Row(
+                        children: [
+                          Container(
+                            height: 40.v,
+                            width: 40.v,
+                            padding: EdgeInsets.all(6.v),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.v),
+                                color:
+                                    theme.colorScheme.primary.withOpacity(0.2)),
+                            child: CustomImageView(
+                              imagePath:
+                                  "${EnvironmentConstants.baseUrlforimage}${widget.projectdetail.organiserPic}",
+                              // height: 30.h,
                               fit: BoxFit.cover,
                             ),
                           ),
-                          child: Center(
-                              child: Container(
-                            decoration: BoxDecoration(
-                                color: appTheme.white.withOpacity(0.5),
-                                shape: BoxShape.circle),
-                            child: Icon(
-                              Icons.play_arrow,
-                              color: theme.colorScheme.primary,
-                              size: 40.h,
-                            ),
-                          )),
-                        ))
-                    : const Center(child: CircularProgressIndicator()),
-                GestureDetector(
-                  onTap: () {
-                    print("asdf");
-                    Get.to(() => VideoPlay(
-                          link:
-                              "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-                        ));
-                  },
-                  child: Container(
-                    height: 244.h,
-
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black
-                              .withOpacity(0.3), // Adjust opacity as needed
-                        ],
-                      ),
-                    ), // Adjust opacity as needed
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 30.h),
-                  child: IconButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: appTheme.white,
-                      )),
-                ),
-
-                Positioned(
-                    bottom: 0,
-                    left: 40,
-                    right: 40,
-                    child: Container(
-                      width: 295.v,
-                      height: 60.h,
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.h, horizontal: 10.h),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(45.v),
-                          color: Colors.white),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
+                          SizedBox(width: 10.v),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(
-                                width: 80.v,
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                        left: 0,
-                                        child: CustomImageView(
-                                          height: 34.h,
-                                          imagePath: ImageConstant.profile,
-                                        )),
-                                    Positioned(
-                                        left: 20,
-                                        child: CustomImageView(
-                                          height: 34.h,
-                                          imagePath: ImageConstant.profile,
-                                        )),
-                                    Positioned(
-                                        left: 40,
-                                        child: CustomImageView(
-                                          height: 34.h,
-                                          imagePath: ImageConstant.profile,
-                                        )),
-                                  ],
-                                ),
-                              ),
                               Text(
-                                '+20 Going',
+                                // widget.projectdetail.organiserId.fullname,
+                                widget.projectdetail.organiserName ?? "Admin",
                                 style: TextStyle(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.v,
+                                  color: appTheme.blackText,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(width: 30.v),
-                          Container(
-                            width: 65.v,
-                            height: 28.h,
-                            padding: EdgeInsets.all(6.v),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.v),
-                                color: theme.colorScheme.primary),
-                            child: Center(
-                              child: Text(
-                                "Invite",
+                              // SizedBox(height: 7.v),
+                              Text(
+                                "Organizer",
                                 style: TextStyle(
                                   fontSize: 12.v,
-                                  color: appTheme.white,
+                                  color: appTheme.gray500,
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                            ),
-                          )
+                            ],
+                          ),
                         ],
                       ),
-                    ))
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 5.h,
-        ),
-        Container(
-          // width: 320.v,
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.h,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(height: 30.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 320.v,
-                    child: Text(
-                      widget.project.title,
-                      overflow: TextOverflow.clip,
-                      style: TextStyle(
-                        fontSize: 30.v,
-                        color: appTheme.blackText,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 15.h),
-              // EventDetailWidget(
-              //   icon: ImageConstant.calendaricon,
-              // title: _initialStatusController
-              //       .formatDate(DateTime.parse(widget. project.startTime)),
-              //   des:
-              //       "${DateFormat('EEEE').format(DateTime.parse(eventdetail.startTime))}  ${DateFormat.jm().format(DateTime.parse(eventdetail.startTime))} - ${DateFormat.jm().format(DateTime.parse(eventdetail.endTime))}",
-
-              // ),
-              SizedBox(height: 15.h),
-              EventDetailWidget(
-                icon: ImageConstant.location,
-                title: 'Gala Convention Center',
-                des: '36 Guild Street London, UK ',
-              ),
-              SizedBox(height: 15.h),
-              Row(
-                children: [
-                  Container(
-                    height: 40.v,
-                    width: 40.v,
-                    padding: EdgeInsets.all(6.v),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.v),
-                        color: theme.colorScheme.primary.withOpacity(0.2)),
-                    child: CustomImageView(
-                      imagePath: ImageConstant.profile,
-                      // height: 30.h,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(width: 10.v),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                      SizedBox(height: 15.h),
                       Text(
-                        "Ashfak",
+                        "About Event",
                         style: TextStyle(
                           fontSize: 16.v,
                           color: appTheme.blackText,
@@ -296,46 +258,24 @@ class _DonationDetailScreenState extends State<DonationDetailScreen> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      // SizedBox(height: 7.v),
-                      Text(
-                        "Organizer",
-                        style: TextStyle(
-                          fontSize: 12.v,
-                          color: appTheme.gray500,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
+                      SizedBox(
+                        width: 330.v,
+                        child: Text(
+                          widget.projectdetail.about,
+                          style: TextStyle(
+                            fontSize: 14.v,
+                            color: appTheme.black900.withOpacity(0.6),
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              SizedBox(height: 15.h),
-              Text(
-                "About Event",
-                style: TextStyle(
-                  fontSize: 16.v,
-                  color: appTheme.blackText,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
                 ),
-              ),
-              SizedBox(
-                width: 330.v,
-                child: Text(
-                  "Lorem ipsum dolor sit amet consectetur. Dictum mauris.",
-                  style: TextStyle(
-                    fontSize: 14.v,
-                    color: appTheme.black900.withOpacity(0.6),
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    ));
+        ));
   }
 }
 
@@ -378,13 +318,16 @@ class EventDetailWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16.v,
-                color: appTheme.blackText,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
+            SizedBox(
+              width: 280.v,
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16.v,
+                  color: appTheme.blackText,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             // SizedBox(height: 7.v),

@@ -40,17 +40,6 @@ class ThemeHelper {
       scaffoldBackgroundColor: appTheme.lightbackground,
       visualDensity: VisualDensity.standard,
       colorScheme: colorScheme,
-      checkboxTheme: CheckboxThemeData(
-        checkColor: WidgetStateProperty.all(Colors.white), // Tick color
-        fillColor: WidgetStateProperty.resolveWith<Color?>(
-          (Set<WidgetState> states) {
-            if (states.contains(WidgetState.selected)) {
-              return theme.colorScheme.primary; // Color when selected
-            }
-            return theme.colorScheme.primaryContainer; // Default color
-          },
-        ),
-      ),
       dividerColor: Colors.transparent,
       textTheme: TextThemes.textTheme(colorScheme),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -130,6 +119,7 @@ class PrimaryColors {
 
   Color get gray500 => const Color(0XFF747688);
   Color get gray400 => const Color(0XFFBDB5B5);
+  Color get gray100 => const Color(0XFFB2B2B2);
 
   //lightbackground
   Color get lightbackground => const Color(0XFFF3F3F3);

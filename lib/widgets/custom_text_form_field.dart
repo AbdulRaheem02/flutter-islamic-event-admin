@@ -7,6 +7,7 @@ class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField(
       {super.key,
       this.alignment,
+      this.enabled = true,
       this.width,
       this.scrollPadding,
       this.controller,
@@ -26,15 +27,14 @@ class CustomTextFormField extends StatelessWidget {
       this.contentPadding,
       this.borderDecoration,
       this.fillColor,
-      this.onChanged,
       this.filled = false,
+      this.onChanged,
       this.validator});
 
   final Alignment? alignment;
-  final ValueChanged<String>? onChanged;
 
   final double? width;
-
+  final enabled;
   final TextEditingController? scrollPadding;
 
   final TextEditingController? controller;
@@ -74,7 +74,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool? filled;
 
   final FormFieldValidator<String>? validator;
-
+  final ValueChanged<String>? onChanged; // New parameter for onChanged
   @override
   Widget build(BuildContext context) {
     return alignment != null
@@ -88,6 +88,7 @@ class CustomTextFormField extends StatelessWidget {
         width: width ?? double.maxFinite,
         child: TextFormField(
           onChanged: onChanged,
+          enabled: enabled,
           scrollPadding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           controller: controller,

@@ -1,22 +1,10 @@
 import 'package:islamic_event_admin/controller/authController.dart';
-import 'package:islamic_event_admin/core/utils/size_utils.dart';
-import 'package:islamic_event_admin/screen/sign_in_screen/reset_password_screen.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/app_export.dart';
-import '../../core/utils/image_constant.dart';
-import '../../theme/custom_text_style.dart';
-import '../../theme/theme_helper.dart';
 import '../../widgets/custom_elevated_button.dart';
-import '../../widgets/custom_icon_button.dart';
-import '../../widgets/custom_image_view.dart';
 import '../../widgets/custom_text_form_field.dart';
-import '../home_page/home_page.dart';
-import '../home_page_screen.dart';
-import '../sign_up_screen/sign_up_screen.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
 class SignInScreen extends StatefulWidget {
@@ -28,11 +16,39 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
   final AuthController _authController = Get.find<AuthController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isSwitched = false;
+  bool absure = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCredentials();
+  }
+
+  void _loadCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      emailController.text = prefs.getString('email') ?? '';
+      passwordController.text = prefs.getString('password') ?? '';
+      isSwitched = prefs.getBool('remember_me') ?? false;
+    });
+  }
+
+  void _saveCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (isSwitched) {
+      await prefs.setString('email', emailController.text);
+      await prefs.setString('password', passwordController.text);
+    } else {
+      await prefs.remove('email');
+      await prefs.remove('password');
+    }
+    await prefs.setBool('remember_me', isSwitched);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,10 +71,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: [
                         CustomImageView(
                           imagePath: ImageConstant.logo,
-                          // height: 72.v,
                           width: 102.h,
                         ),
-                        // SizedBox(height: 4.h),
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
@@ -88,14 +102,13 @@ class _SignInScreenState extends State<SignInScreen> {
                         _buildEmailSection(context),
                         SizedBox(height: 15.v),
                         _buildPasswordSection(context),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
                               children: [
                                 Transform.scale(
-                                  scale: 0.7, // Adjust the scale as needed
+                                  scale: 0.7,
                                   child: Switch(
                                     value: isSwitched,
                                     onChanged: (value) {
@@ -112,22 +125,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                 ),
                               ],
                             ),
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     Get.to(() => ResetPasswordScreen());
-                            //   },
-                            //   child: Text(
-                            //     "Forgot Password?",
-                            //     style: theme.textTheme.bodySmall!
-                            //         .copyWith(color: appTheme.black900),
-                            //   ),
-                            // ),
                           ],
                         ),
                         SizedBox(height: 30.v),
                         CustomElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
+                              _saveCredentials();
                               _authController.login({
                                 "email": emailController.text,
                                 "password": passwordController.text,
@@ -139,38 +143,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           text: "SIGN IN",
                           buttonTextStyle: CustomTextStyles.bodySmallOnPrimary,
                         ),
-                        // SizedBox(height: 100.v),
-                        // RichText(
-                        //   text: TextSpan(
-                        //     children: [
-                        //       TextSpan(
-                        //         text: "Don’t ",
-                        //         style: theme.textTheme.bodySmall!
-                        //             .copyWith(color: appTheme.black900),
-                        //       ),
-                        //       TextSpan(
-                        //         text: "have an account? ",
-                        //         style: theme.textTheme.bodySmall!
-                        //             .copyWith(color: appTheme.black900),
-                        //       ),
-                        //       TextSpan(
-                        //         text: "Sign Up",
-                        //         style: CustomTextStyles.bodySmallPrimary,
-                        //         recognizer: TapGestureRecognizer()
-                        //           ..onTap = () {
-                        //             // Handle sign up tap here
-                        //             Navigator.of(context).push(
-                        //               MaterialPageRoute(
-                        //                   builder: (context) => SignUpScreen()),
-                        //             );
-                        //           },
-                        //       )
-                        //     ],
-                        //   ),
-                        //   textAlign: TextAlign.left,
-                        // ),
-
-                        // SizedBox(height: 21.v),
+                        SizedBox(height: 100.v),
                       ],
                     ),
                   ),
@@ -183,9 +156,6 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  /// Section Widget
-
-  /// Section Widget
   Widget _buildEmailSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
@@ -217,7 +187,6 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  /// Section Widget
   Widget _buildPasswordSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
@@ -231,10 +200,16 @@ class _SignInScreenState extends State<SignInScreen> {
             textInputType: TextInputType.visiblePassword,
             suffix: Container(
               margin: EdgeInsets.fromLTRB(30.h, 0.v, 12.h, 0.v),
-              child: CustomImageView(
-                imagePath: ImageConstant.eye,
-                height: 15.v,
-                width: 19.h,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    absure = !absure;
+                  });
+                },
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(0.h, 10.v, 0.h, 10.v),
+                  child: Icon(absure ? Icons.visibility : Icons.visibility_off),
+                ),
               ),
             ),
             validator: (value) {
@@ -254,7 +229,7 @@ class _SignInScreenState extends State<SignInScreen> {
             suffixConstraints: BoxConstraints(
               maxHeight: 40.v,
             ),
-            obscureText: true,
+            obscureText: absure,
             contentPadding: EdgeInsets.only(
               left: 14.h,
               top: 13.v,

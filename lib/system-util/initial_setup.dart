@@ -8,7 +8,7 @@ import '../controller/initialStatuaController.dart';
 void setIntialSetup() {
   Get.put(ApiBaseHelper());
   Get.put(ApiRepository(Get.find()));
-  Get.put(InitialStatusController(Get.find()));
+  // Get.put(InitialStatusController(Get.find()));
 
   Get.put(AuthController(Get.find()));
 }

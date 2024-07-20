@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:file_picker/file_picker.dart';
 
 class PDFScreen extends StatefulWidget {
   final String? path;
@@ -60,22 +59,17 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
               setState(() {
                 errorMessage = error.toString();
               });
-              print(error.toString());
             },
             onPageError: (page, error) {
               setState(() {
                 errorMessage = '$page: ${error.toString()}';
               });
-              print('$page: ${error.toString()}');
             },
             onViewCreated: (PDFViewController pdfViewController) {
               _controller.complete(pdfViewController);
             },
-            onLinkHandler: (String? uri) {
-              print('goto uri: $uri');
-            },
+            onLinkHandler: (String? uri) {},
             onPageChanged: (int? page, int? total) {
-              print('page change: $page/$total');
               setState(() {
                 currentPage = page;
               });

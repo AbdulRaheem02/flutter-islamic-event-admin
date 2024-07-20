@@ -37,5 +37,14 @@ class ImageConstant {
   static String share = '$iconPath/Vector1.svg';
   static String back = '$iconPath/back.svg';
 
+  static String facebook = '$imagePath/facebook.svg';
+  static String instagram = '$imagePath/instagram.svg';
+  static String messenger = '$imagePath/messenger.svg';
+  static String tiktok = '$imagePath/tiktok.svg';
+  static String twitter = '$imagePath/twitter.svg';
+  static String whatsapp = '$imagePath/whatsapp.svg';
+  static String youtube = '$imagePath/youtube.svg';
+  static String sharebackground = '$imagePath/share.png';
+
   ///
 }

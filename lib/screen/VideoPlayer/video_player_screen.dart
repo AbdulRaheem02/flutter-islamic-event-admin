@@ -120,6 +120,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
@@ -156,10 +157,10 @@ class _VideoPlayState extends State<VideoPlay> {
             _isInitialized = true;
           });
         }).catchError((error) {
-          print("Video initialization error: $error");
+          Get.log("Video initialization error: $error");
         });
     } catch (e) {
-      print("Error initializing video player: $e");
+      Get.log("Error initializing video player: $e");
     }
   }
 

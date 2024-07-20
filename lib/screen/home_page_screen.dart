@@ -1,3 +1,4 @@
+import 'package:islamic_event_admin/screen/home_page/MoreScreen.dart';
 import 'package:islamic_event_admin/screen/home_page/books_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -53,9 +54,10 @@ class _HomePageState extends State<HomePage> {
         controller: _pageController,
         children: const <Widget>[
           EventPageScreen(),
-          AddMentor(),
-          // ProjectsScreen(),
+          MentorListPage(),
+          ProjectsScreen(),
           BooksScreen(),
+          MoreScreen()
         ],
         onPageChanged: (index) {
           setState(() {
@@ -110,23 +112,23 @@ class _HomePageState extends State<HomePage> {
               ),
               label: 'Mentor',
             ),
-            // BottomNavigationBarItem(
-            //   icon: ColorFiltered(
-            //     colorFilter: _selectedIndex == 2
-            //         ? ColorFilter.mode(
-            //             theme.colorScheme.primary, BlendMode.srcIn)
-            //         : const ColorFilter.mode(
-            //             Color.fromARGB(255, 160, 162, 165), BlendMode.srcIn),
-            //     child: CustomImageView(
-            //       imagePath: ImageConstant.projects,
-            //       // height: height * 0.02,
-            //       height: height * 0.04,
+            BottomNavigationBarItem(
+              icon: ColorFiltered(
+                colorFilter: _selectedIndex == 2
+                    ? ColorFilter.mode(
+                        theme.colorScheme.primary, BlendMode.srcIn)
+                    : const ColorFilter.mode(
+                        Color.fromARGB(255, 160, 162, 165), BlendMode.srcIn),
+                child: CustomImageView(
+                  imagePath: ImageConstant.projects,
+                  // height: height * 0.02,
+                  height: height * 0.04,
 
-            //       width: width * 0.06,
-            //     ),
-            //   ),
-            //   label: 'Projects',
-            // ),
+                  width: width * 0.06,
+                ),
+              ),
+              label: 'Projects',
+            ),
             BottomNavigationBarItem(
               icon: ColorFiltered(
                 colorFilter: _selectedIndex == 3
@@ -143,6 +145,19 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               label: 'Books',
+            ),
+            BottomNavigationBarItem(
+              icon: ColorFiltered(
+                  colorFilter: _selectedIndex == 4
+                      ? ColorFilter.mode(
+                          theme.colorScheme.primary, BlendMode.srcIn)
+                      : const ColorFilter.mode(
+                          Color.fromARGB(255, 160, 162, 165), BlendMode.srcIn),
+                  child: Icon(
+                    Icons.more_vert_sharp,
+                    size: 35.h,
+                  )),
+              label: 'More',
             ),
           ],
 

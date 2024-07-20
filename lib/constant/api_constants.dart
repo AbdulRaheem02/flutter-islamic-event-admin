@@ -16,7 +16,19 @@ class ApiConstant {
   static const getAllEvents = "getAllEvents";
   static const getEventById = "getEventById";
   static const getAllProjects = "getAllProjects";
-  static const getProjectById = "getEventById";
+  static const getProjectById = "getProjectById";
+  static const getAllBooks = "getAllBooks";
+  static const getBookById = "getBookById";
+
+  static const getAllMentor = "getAllMembers";
+  static const getAllNotifications = "getAllNotification";
+  static const createCustomer = "createCustomer";
+  static const payment = "payment";
+  static const userGoing = "userGoing";
+
+  static const getprofiledetail = "getProfile";
+  static const getAllTrips = "getAllTrips";
+  static const getTripById = "getTripById";
 
   //Admin
   static const createBook = "createBook";
@@ -25,4 +37,10 @@ class ApiConstant {
   static const createTrip = "createTrip";
 
   static const createMember = "createMember";
+
+  static const deleteEvent = "deleteEvent";
+  static const deleteTrip = "deleteTrip";
+  static const deleteProject = "deleteProject";
+  static const deleteMentor = "deleteMember";
+  static const deleteBook = "deleteBook";
 }

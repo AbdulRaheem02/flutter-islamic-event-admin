@@ -32,14 +32,14 @@
 //   void onRequest(
 //       RequestOptions options, RequestInterceptorHandler handler) async {
 //     if (await _isInternetConnected()) {
-//       print(
+//       Get.log(
 //           "--> ${options.method.toUpperCase()} ${options.baseUrl}${options.path}");
-//       print("Headers: ${options.headers}");
-//       print("QueryParameters: ${options.queryParameters}");
+//       Get.log("Headers: ${options.headers}");
+//       Get.log("QueryParameters: ${options.queryParameters}");
 //       if (options.data != null) {
 //         log("Body: ${options.data}");
 //       }
-//       print("--> END ${options.method.toUpperCase()}");
+//       Get.log("--> END ${options.method.toUpperCase()}");
 //       handler.next(options);
 //     } else {
 //       handler.reject(
@@ -50,13 +50,13 @@
 //   @override
 //   void onError(DioError dioError, ErrorInterceptorHandler handler) {
 
-//     print(
+//     Get.log(
 //         "ERROR[${dioError.response?.statusCode}] => PATH: ${dioError.requestOptions.baseUrl}${dioError.requestOptions.path}");
-//     print("Error Message: ${dioError.message}");
+//     Get.log("Error Message: ${dioError.message}");
 //     if (dioError.response != null) {
 //       EasyLoading.dismiss();
-//       print("Error Data: ${dioError.response?.data}");
-//       print("Error Code: ${dioError.response?.statusCode}");
+//       Get.log("Error Data: ${dioError.response?.data}");
+//       Get.log("Error Code: ${dioError.response?.statusCode}");
 //     }
 //     handler.next(dioError);
 //   }
@@ -65,12 +65,12 @@
 //   void onResponse(Response response, ResponseInterceptorHandler handler) {
 //     EasyLoading.dismiss();
 
-//     print(
+//     Get.log(
 //         "<-- ${response.statusCode} ${response.requestOptions.baseUrl}${response.requestOptions.path}");
-//     print("Headers: ${response.headers}");
-//     print(
+//     Get.log("Headers: ${response.headers}");
+//     Get.log(
 //         "Response: ${const JsonEncoder.withIndent('  ').convert(response.data)}");
-//     print("<-- END HTTP");
+//     Get.log("<-- END HTTP");
 //     handler.next(response);
 //   }
 
@@ -81,6 +81,7 @@ import 'package:dio/dio.dart';
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../custom_widgets/toast.dart';
 import 'env_constants.dart';
@@ -182,15 +183,15 @@ class LoggingInterceptors extends Interceptor {
       }
       handler.next(options);
     } else {
-      handler.reject(
-          DioError(requestOptions: options, error: 'No Internet Connection'));
+      handler.reject(DioException(
+          requestOptions: options, error: 'No Internet Connection'));
     }
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     if (error) {
-      if (err.type == DioErrorType.badResponse) {
+      if (err.type == DioExceptionType.badResponse) {
         final uri = err.response?.requestOptions.uri;
         _printBoxed(
             header:
@@ -208,7 +209,7 @@ class LoggingInterceptors extends Interceptor {
     }
 
     if (err.response != null) {
-      print("Error Data: ${err.response?.data}");
+      Get.log("Error Data: ${err.response?.data}");
     }
     handler.next(err);
   }

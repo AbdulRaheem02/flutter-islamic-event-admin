@@ -1,286 +1,87 @@
 import 'dart:ui';
-import 'package:dio/dio.dart' as Deo;
-import 'package:get/get.dart';
-import 'package:islamic_event_admin/controller/initialStatuaController.dart';
 
+import 'package:islamic_event_admin/controller/initialStatuaController.dart';
 import 'package:islamic_event_admin/core/app_export.dart';
-import 'package:islamic_event_admin/custom_widgets/toast.dart';
+import 'package:islamic_event_admin/model/MemberModel.dart';
+import 'package:islamic_event_admin/screen/home_page/project_page.dart';
 import 'package:islamic_event_admin/theme/theme_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:islamic_event_admin/widgets/custom_elevated_button.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+
+import '../../api-handler/env_constants.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
-import '../../widgets/custom_text_form_field.dart';
+import '../../widgets/circleimage.dart';
 import '../home_page/home_page.dart';
 
-class AddMentor extends StatefulWidget {
-  const AddMentor({super.key});
+class MentorListPage extends StatefulWidget {
+  const MentorListPage({super.key});
 
   @override
-  State<AddMentor> createState() => _AddMentorState();
+  State<MentorListPage> createState() => _MentorListPageState();
 }
 
-class _AddMentorState extends State<AddMentor> {
-  TextEditingController userNameController = TextEditingController();
+class _MentorListPageState extends State<MentorListPage> {
   final InitialStatusController _initialStatusController =
       Get.find<InitialStatusController>();
-  TextEditingController emailController = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    _initialStatusController.allmemberlist.clear();
+    _initialStatusController.getallmentor();
 
-  TextEditingController descriptionController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final List<bool> _selections = [false, false, false, false];
-  TextEditingController phoneController = TextEditingController();
-
-  File? _image;
-
-  Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: Form(
-        key: _formKey,
-        child: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(vertical: 24.v),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 5.v),
-                    padding: EdgeInsets.symmetric(horizontal: 20.h),
-                    child: Column(
-                      children: [
-                        // const MentorTile(),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 1.h),
-                            child: Text(
-                              "Enter Detail",
-                              style: theme.textTheme.titleLarge,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 5.v),
-                        _image == null
-                            ? const Text('No image selected.')
-                            : Image.file(
-                                _image!,
-                                height: 100.h,
-                                width: 200,
-                              ),
-                        SizedBox(height: 5.h),
-                        TextButton(
-                            onPressed: () {
-                              _pickImage();
-                            },
-                            child: const Text("Select Profile Picture")),
-                        SizedBox(height: 5.v),
-                        _buildUsernameSection(context),
-                        SizedBox(height: 15.v),
-                        _buildEmailSection(context),
-                        SizedBox(height: 15.v),
-                        CustomTextFormField(
-                            controller: phoneController,
-                            hintText: "Phone Number",
-                            hintStyle: CustomTextStyles.bodySmall10,
-                            textInputType: TextInputType.number),
-                        SizedBox(height: 15.v),
-                        _buildDescriptionSection(context),
-                        CheckboxListTile(
-                          title: const Text('Sunnah Healing'),
-                          value: _selections[0],
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _selections[0] = value ?? false;
-                            });
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 5,
+            ),
+            Obx(
+              () => _initialStatusController.membernf.value == true &&
+                      _initialStatusController.allmemberlist.isEmpty
+                  ? const Center(
+                      child: Text("Not Available"),
+                    )
+                  : _initialStatusController.allmemberlist.isEmpty
+                      ? buildShimmerEffectColumn(height: 100.h, length: 5)
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount:
+                              _initialStatusController.allmemberlist.length,
+                          itemBuilder: (context, index) {
+                            MemberModel memberdetail =
+                                _initialStatusController.allmemberlist[index];
+                            return MentorTile(
+                              memberdetail: memberdetail,
+                            );
                           },
                         ),
-                        CheckboxListTile(
-                          title: const Text('Appointment'),
-                          value: _selections[1],
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _selections[1] = value ?? false;
-                            });
-                          },
-                        ),
-                        CheckboxListTile(
-                          title: const Text('Nikkah'),
-                          value: _selections[2],
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _selections[2] = value ?? false;
-                            });
-                          },
-                        ),
-                        CheckboxListTile(
-                          title: const Text('Speech'),
-                          value: _selections[3],
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _selections[3] = value ?? false;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 30.v),
-                        CustomElevatedButton(
-                          onPressed: () async {
-                            if (_image != null) {
-                              var fileName = _image!.path.split('/').last;
-                              var file = await Deo.MultipartFile.fromFile(
-                                _image!.path,
-                                filename: fileName,
-                              );
-                              List<String> select = [];
-                              if (_selections[0] == true) {
-                                select.addAll(["Sunnah Healing"]);
-                              }
-                              print(select);
-                              if (_selections[1] == true) {
-                                select.addAll(["Appointment"]);
-                              }
-                              print(select);
-
-                              if (_selections[2] == true) {
-                                select.addAll(["Nikkah"]);
-                              }
-                              print(select);
-
-                              if (_selections[3] == true) {
-                                select.addAll(["Speech"]);
-                              }
-                              print(select);
-
-                              if (_formKey.currentState!.validate()) {
-                                print(select);
-
-                                _initialStatusController.addMentor({
-                                  "fullname": userNameController.text,
-                                  "email": emailController.text,
-                                  "phone": phoneController.text,
-                                  "about": descriptionController.text,
-                                  "offers": select,
-                                  "image": file
-                                });
-                              }
-                            } else {
-                              flutterToast("Please Upload Pdf");
-                            }
-                          },
-                          text: "Add Mentor",
-                          width: 200.v,
-                          buttonTextStyle: CustomTextStyles.bodySmallOnPrimary,
-                        ),
-                        SizedBox(height: 100.v),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
+            )
+            // ClipRect(
+            //   child: BackdropFilter(
+            //     // filter: ImageFilter.blur(sigmaX: -3.0, sigmaY: 1.0),
+            //     filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            //     child: Container(
+            //       height: 100.0, // Adjust the height as needed
+            //       color: Colors.black.withOpacity(
+            //           0.2), // Adjust the opacity and color as needed
+            //     ),
+            //   ),
+            // ),
+          ],
         ),
-      ),
-
-      // SingleChildScrollView(
-      //   child: Column(
-      //     children: [
-      //       const SizedBox(
-      //         height: 5,
-      //       ),
-      //       ListView.builder(
-      //         shrinkWrap: true,
-      //         physics: const NeverScrollableScrollPhysics(),
-      //         itemCount: 3,
-      //         itemBuilder: (context, index) {
-      //           return const MentorTile();
-      //         },
-      //       ),
-      //       // ClipRect(
-      //       //   child: BackdropFilter(
-      //       //     // filter: ImageFilter.blur(sigmaX: -3.0, sigmaY: 1.0),
-      //       //     filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-      //       //     child: Container(
-      //       //       height: 100.0, // Adjust the height as needed
-      //       //       color: Colors.black.withOpacity(
-      //       //           0.2), // Adjust the opacity and color as needed
-      //       //     ),
-      //       //   ),
-      //       // ),
-      //     ],
-      //   ),
-      // ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildUsernameSection(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 1.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomTextFormField(
-            controller: userNameController,
-            hintText: "Full name",
-            hintStyle: CustomTextStyles.bodySmall10,
-          )
-        ],
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildEmailSection(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 1.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomTextFormField(
-            controller: emailController,
-            hintText: "abc@email.com",
-            hintStyle: CustomTextStyles.bodySmall10,
-            textInputType: TextInputType.emailAddress,
-          )
-        ],
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildDescriptionSection(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 1.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomTextFormField(
-            maxLines: 7,
-            controller: descriptionController,
-            hintText: "Enter About",
-            hintStyle: CustomTextStyles.bodySmall10,
-            textInputType: TextInputType.emailAddress,
-          )
-        ],
       ),
     );
   }
@@ -290,7 +91,7 @@ class _AddMentorState extends State<AddMentor> {
       leadingWidth: 40.h,
       centerTitle: true,
       title: AppbarTitle(
-        text: "Mentor",
+        text: "Members",
       ),
       styleType: Style.bgFill,
     );
@@ -298,7 +99,9 @@ class _AddMentorState extends State<AddMentor> {
 }
 
 class MentorTile extends StatefulWidget {
-  const MentorTile({
+  MemberModel memberdetail;
+  MentorTile({
+    required this.memberdetail,
     super.key,
   });
 
@@ -360,10 +163,30 @@ class _MentorTileState extends State<MentorTile> {
                               SizedBox(
                                 width: 5.v,
                               ),
-                              CustomImageView(
-                                imagePath: ImageConstant.profile,
-                                height: 70.h,
-                                fit: BoxFit.fill,
+                              // CustomImageView(
+                              //   imagePath:
+                              //       "${EnvironmentConstants.baseUrlforimage}${widget.memberdetail.image}",
+                              //   // ImageConstant.profile,
+                              //   height: 70.h,
+                              //   width: 70.v,
+
+                              //   fit: BoxFit.fill,
+                              // ),
+
+                              CircleAvatar(
+                                child: Circleimage(
+                                  onTap: () {
+                                    Get.log("omnta");
+                                  },
+                                  imagePath:
+                                      "${EnvironmentConstants.baseUrlforimage}${widget.memberdetail.image}",
+                                  height: 70.adaptSize,
+                                  width: 70.adaptSize,
+                                  margin: EdgeInsets.only(
+                                    top: 2.v,
+                                    bottom: 2.v,
+                                  ),
+                                ),
                               ),
                               SizedBox(
                                 width: 5.v,
@@ -384,7 +207,7 @@ class _MentorTileState extends State<MentorTile> {
                                               fontWeight: FontWeight.w400),
                                     ),
                                     Text(
-                                      "Molana Arif Shabeer Mushai Qadri",
+                                      widget.memberdetail.fullname,
                                       style: theme.textTheme.bodyLarge!
                                           .copyWith(
                                               color: appTheme.blackheading,
@@ -401,26 +224,128 @@ class _MentorTileState extends State<MentorTile> {
                                           children: [
                                             Row(
                                               children: [
-                                                Container(
-                                                  width: 100.v,
-                                                  // height: 28.h,
-                                                  padding: EdgeInsets.all(4.v),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5.v),
-                                                      color: theme
-                                                          .colorScheme.primary),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Send Message",
-                                                      style: TextStyle(
-                                                        fontSize: 10.v,
-                                                        color: appTheme.white,
-                                                        fontFamily: 'Inter',
-                                                        fontWeight:
-                                                            FontWeight.w500,
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    final Email email = Email(
+                                                      body:
+                                                          'Download Islamic Event',
+                                                      subject: 'Download',
+                                                      recipients: [
+                                                        widget
+                                                            .memberdetail.email
+                                                      ],
+                                                      cc: ['cc@example.com'],
+                                                      bcc: ['bcc@example.com'],
+                                                      // attachmentPaths: ['/path/to/attachment.zip'],
+                                                      // isHTML: false,
+                                                    );
+
+                                                    try {
+                                                      await FlutterEmailSender
+                                                          .send(email);
+                                                    } catch (error) {
+                                                      print(error);
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    width: 100.v,
+                                                    // height: 28.h,
+                                                    padding:
+                                                        EdgeInsets.all(4.v),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5.v),
+                                                        color: theme.colorScheme
+                                                            .primary),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Send Message",
+                                                        style: TextStyle(
+                                                          fontSize: 10.v,
+                                                          color: appTheme.white,
+                                                          fontFamily: 'Inter',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
                                                       ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    final Uri launchUri = Uri(
+                                                      scheme: 'tel',
+                                                      path: widget
+                                                          .memberdetail.phone,
+                                                    );
+                                                    await launchUrl(launchUri);
+                                                  },
+                                                  child: appbarItemicon(
+                                                    height: 25.v,
+                                                    width: 25.v,
+                                                    icon: ImageConstant.call,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 4.v),
+                                                InkWell(
+                                                  onTap: () {},
+                                                  child: appbarItemicon(
+                                                    height: 25.v,
+                                                    width: 25.v,
+                                                    icon: ImageConstant.share,
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: const Text(
+                                                              'Mentor'),
+                                                          content: const Text(
+                                                              'Are you sure you want to delete?'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(); // Close the dialog
+                                                              },
+                                                              child: const Text(
+                                                                  'Cancel'),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                Get.back();
+                                                                Get.find<
+                                                                        InitialStatusController>()
+                                                                    .deleteMentor(
+                                                                        widget
+                                                                            .memberdetail
+                                                                            .id);
+                                                              },
+                                                              child: const Text(
+                                                                  'Delete'),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      color: Colors.red,
                                                     ),
                                                   ),
                                                 ),
@@ -447,25 +372,42 @@ class _MentorTileState extends State<MentorTile> {
                     SizedBox(
                       height: 5.v,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        featurewidget(
-                          title: 'Sunnah Healing',
-                        ),
-                        featurewidget(
-                          title: 'Appointment',
-                        ),
-                        featurewidget(
-                          width: 55.v,
-                          title: 'Nikkah',
-                        ),
-                        featurewidget(
-                          width: 55.v,
-                          title: 'Speech',
-                        ),
-                      ],
+                    SizedBox(
+                      height: 20.v,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: widget.memberdetail.offers.length,
+                          // physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 3),
+                              child: featurewidget(
+                                title: widget.memberdetail.offers[index]
+                                    .toString(),
+                              ),
+                            );
+                          }),
                     ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     featurewidget(
+                    //       title: 'Sunnah Healing',
+                    //     ),
+                    //     featurewidget(
+                    //       title: 'Appointment',
+                    //     ),
+                    //     featurewidget(
+                    //       width: 55.v,
+                    //       title: 'Nikkah',
+                    //     ),
+                    //     featurewidget(
+                    //       width: 55.v,
+                    //       title: 'Speech',
+                    //     ),
+                    //   ],
+                    // ),
                     Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 10.v, vertical: 5.v),
@@ -473,16 +415,21 @@ class _MentorTileState extends State<MentorTile> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "About Mentor",
-                            style: theme.textTheme.bodyLarge!.copyWith(
-                                color: appTheme.blackheading,
-                                fontSize: 14.h,
-                                fontWeight: FontWeight.w700),
+                          Row(
+                            children: [
+                              Text(
+                                "About Mentor",
+                                textAlign: TextAlign.start,
+                                style: theme.textTheme.bodyLarge!.copyWith(
+                                    color: appTheme.blackheading,
+                                    fontSize: 14.h,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ],
                           ),
                           Text(
-                            """Lorem ipsum dolor sit amet consectetur. Blandit morbi nunc eleifend leo quam nulla dapibus tincidunt egestas. Iaculis pulvinar etiam dignissim sit aenean pretium feugiat. Semper non sagittis erat neque. Tincidunt blandit cum mi imperdiet neque tristique risus. Nunc lorem vitae pharetra in lorem et vitae.
-          Id sit tortor posuere ut augue. Et diam quis aliquet vestibulum nullam faucibus ipsum tincidunt.""",
+                            widget.memberdetail.about,
+                            textAlign: TextAlign.start,
                             style: theme.textTheme.bodyLarge!.copyWith(
                                 color: appTheme.gray400,
                                 fontSize: 12.h,

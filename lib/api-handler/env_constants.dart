@@ -36,5 +36,8 @@ class EnvironmentConstants {
   static String internetCheckUrl = 'http://google.com/';
   static String internetNotAvailableMessage =
       'Please check your internet connection';
-  static String apiKey = '';
+  // static String apiKey = 'AIzaSyCG_wbzjzC9uXpfEOMn8TeKfd4SklwYYC4';
+  static String apiKey = 'AIzaSyAbPn3X5qrqKJ999HOxj4oHpl4bAVfndA8';
+
+//
 }

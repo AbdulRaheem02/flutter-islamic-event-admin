@@ -323,7 +323,7 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Help" id="EPT-qC-fAb">
+                <menuItem title="Help" id="EPT-qC-islamic_event_admin">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="rJ0-wn-3NY"/>
                 </menuItem>

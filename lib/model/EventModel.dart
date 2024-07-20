@@ -4,6 +4,7 @@ class EventModel {
     required this.permanentDeleted,
     required this.title,
     required this.images,
+    this.videos,
     required this.date,
     required this.startTime,
     required this.endTime,
@@ -16,14 +17,24 @@ class EventModel {
     required this.userGoing,
     required this.createdAt,
     required this.updatedAt,
+    this.organiserName,
+    this.organiserPic,
+    required this.price,
   });
   late final String id;
   late final bool permanentDeleted;
   late final String title;
   late final List<dynamic> images;
+  List<dynamic>? videos;
+
   late final String date;
   late final String startTime;
   late final String endTime;
+  late final String price;
+
+  String? organiserPic;
+  String? organiserName;
+
   late final String lat;
   late final String long;
   late final String location;
@@ -37,16 +48,23 @@ class EventModel {
 
   EventModel.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
+    price = json['price'];
+
     permanentDeleted = json['permanentDeleted'];
     title = json['title'];
-    images = List.castFrom<dynamic, dynamic>(json['images']);
+    organiserPic = json['organiserPic'];
+    organiserName = json['organiserName'];
+
+    images = List.castFrom<dynamic, dynamic>(json['pictures']);
+    videos = List.castFrom<dynamic, dynamic>(json['videos']);
+
     date = json['date'];
     startTime = json['startTime'];
     endTime = json['endTime'];
     lat = json['lat'];
     long = json['long'];
     location = json['location'];
-    organiserId = OrganiserId.fromJson(json['organiserId']);
+    // organiserId = OrganiserId.fromJson(json['organiserId']);
     about = json['about'];
     eventType = json['eventType'];
     userGoing = List.castFrom<dynamic, dynamic>(json['userGoing']);
@@ -58,9 +76,16 @@ class EventModel {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['_id'] = id;
+    data['price'] = price;
+
     data['permanentDeleted'] = permanentDeleted;
     data['title'] = title;
-    data['images'] = images;
+    data['organiserPic'] = organiserPic;
+    data['organiserName'] = organiserName;
+
+    data['pictures'] = images;
+    data['videos'] = videos;
+
     data['date'] = date;
     data['startTime'] = startTime;
     data['endTime'] = endTime;
