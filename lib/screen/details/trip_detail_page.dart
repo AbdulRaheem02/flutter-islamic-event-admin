@@ -241,7 +241,9 @@ class _DetailScreenState extends State<TripDetailScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '+20 Going',
+                                        "+${widget.tripdetail.userGoing.length}"
+                                        "  Going",
+                                        // '+20 Going',
                                         style: TextStyle(
                                           color: theme.colorScheme.primary,
                                           fontWeight: FontWeight.bold,

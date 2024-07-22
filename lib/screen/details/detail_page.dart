@@ -240,7 +240,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      '+20 Going',
+                                      "+${widget.eventdetail.userGoing.length}"
+                                      "  Going",
                                       style: TextStyle(
                                         color: theme.colorScheme.primary,
                                         fontWeight: FontWeight.bold,

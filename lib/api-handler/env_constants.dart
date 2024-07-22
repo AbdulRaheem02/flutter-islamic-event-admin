@@ -17,12 +17,15 @@ class EnvironmentConstants {
   static String setEnvironment(Environment env) {
     switch (env) {
       case Environment.PROD:
+        socket = "http://13.127.226.157:3535/";
+        _config = "http://13.127.226.157:3535/api/v1/";
+        baseUrlforimage = "http://13.127.226.157:3535";
+        break;
+      case Environment.STAGING:
         socket = "https://f66468x0-5050.inc1.devtunnels.ms/";
         _config = "https://f66468x0-5050.inc1.devtunnels.ms/api/v1/";
         baseUrlforimage = "https://f66468x0-5050.inc1.devtunnels.ms";
-        break;
-      case Environment.STAGING:
-        _config = "https://jsonplaceholder.typicode.com/";
+
         break;
       case Environment.DEV:
         socket = "https://wv9pfwh9-3535.inc1.devtunnels.ms/";

@@ -249,6 +249,48 @@ class _DetailScreenState extends State<ProjectDetailScreen> {
                         ],
                       ),
                       SizedBox(height: 15.h),
+                      Row(
+                        children: [
+                          Container(
+                              height: 40.v,
+                              width: 40.v,
+                              padding: EdgeInsets.all(6.v),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.v),
+                                  color: theme.colorScheme.primary
+                                      .withOpacity(0.2)),
+                              child: Icon(Icons.person,
+                                  color: theme.colorScheme.primary)),
+                          SizedBox(width: 10.v),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Total Donor",
+                                style: TextStyle(
+                                  fontSize: 16.v,
+                                  color: appTheme.blackText,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              // SizedBox(height: 7.v),
+                              Text(
+                                widget.projectdetail.userGoing.length
+                                    .toString(),
+                                style: TextStyle(
+                                  fontSize: 12.v,
+                                  color: appTheme.gray500,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15.h),
                       Text(
                         "About Event",
                         style: TextStyle(
