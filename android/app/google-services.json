@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "29989386988",
+    "project_id": "islamic-event-fbe51",
+    "storage_bucket": "islamic-event-fbe51.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29989386988:android:200e02056500c2f39203c9",
+        "android_client_info": {
+          "package_name": "com.islamicevent.adminapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDazB14pj0jKVxQa9nNuHvbnQKPiWoBPK8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29989386988:android:e64118c58bc5c1b99203c9",
+        "android_client_info": {
+          "package_name": "com.islamicevent.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDazB14pj0jKVxQa9nNuHvbnQKPiWoBPK8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

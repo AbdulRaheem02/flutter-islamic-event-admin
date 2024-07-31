@@ -1,4 +1,4 @@
-package com.islamicevent.admin
+package com.islamicevent.adminapp
 
 import io.flutter.embedding.android.FlutterActivity
 
