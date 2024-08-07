@@ -311,6 +311,86 @@ class _DetailScreenState extends State<ProjectDetailScreen> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 15.h),
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(
+                          top: 5,
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: appTheme.blueGray400.withOpacity(0.4)),
+                        child: DataTable(
+                          columns: [
+                            // DataColumn(
+                            //     label: Text(
+                            //   'Date',
+                            //   style: Theme.of(context)
+                            //       .textTheme
+                            //       .displaySmall
+                            //       ?.copyWith(
+                            //         fontSize: 12,
+                            //       ),
+                            // )),
+                            DataColumn(
+                                label: Text(
+                              'PAYMENT',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(
+                                    fontSize: 12,
+                                  ),
+                            )),
+
+                            DataColumn(
+                                label: Text(
+                              'AMOUNT',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(fontSize: 12),
+                            )),
+                          ],
+                          rows: widget.projectdetail
+                              .userGoing // Loops through dataColumnText, each iteration assigning the value to element
+                              .map(
+                                ((element) => DataRow(
+                                      cells: <DataCell>[
+                                        DataCell(Text(
+                                          element.userId.fullname.toUpperCase(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge
+                                              ?.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                        )), //Extracting from Map element the value
+                                        // DataCell(Text(
+                                        //   "Date",
+                                        //   style: Theme.of(context)
+                                        //       .textTheme
+                                        //       .displayLarge
+                                        //       ?.copyWith(
+                                        //         fontSize: 13,
+                                        //       ),
+                                        // )),
+                                        DataCell(Text(
+                                          " \$ ${element.amount}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge
+                                              ?.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                        )),
+                                      ],
+                                    )),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                      SizedBox(height: 15.h),
                     ],
                   ),
                 ),

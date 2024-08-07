@@ -1,6 +1,7 @@
 import 'package:islamic_event_admin/controller/authController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:islamic_event_admin/notification_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -129,14 +130,20 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                         SizedBox(height: 30.v),
                         CustomElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            NotificationServices notificationServices =
+                                NotificationServices();
+
+                            String token =
+                                await notificationServices.getDeviceToken();
+
                             if (_formKey.currentState!.validate()) {
                               _saveCredentials();
                               _authController.login({
                                 "email": emailController.text,
                                 "password": passwordController.text,
                                 "role": "Admin",
-                                "deviceToken": ""
+                                "deviceToken": token
                               });
                             }
                           },

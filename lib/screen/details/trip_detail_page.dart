@@ -73,210 +73,81 @@ class _DetailScreenState extends State<TripDetailScreen> {
               children: [
                 SizedBox(
                   width: double.maxFinite,
-                  height: 274.h,
+                  height: 244.h,
                   // color: Colors.amber,
-                  child: SizedBox(
-                    width: double.maxFinite,
-                    height: 244.h,
-                    // decoration: BoxDecoration(color: theme.colorScheme.primary),
-                    child: Stack(
-                      children: [
-                        SizedBox(
-                          height: 244.h,
-                          width: double.infinity,
-                          child: CarouselSlider(
-                            options: CarouselOptions(
-                              viewportFraction: 1.0,
-                              // aspectRatio:   25 / 12,
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      viewportFraction: 1.0,
+                      // aspectRatio:   25 / 12,
 
-                              // Other options...
-                            ),
-                            items: mediaItems.map((imagePath) {
-                              return Builder(
-                                builder: (BuildContext context) {
-                                  Get.log(imagePath);
-                                  // Determine if the current item is a video
-                                  bool isVideo = imagePath.endsWith(".mp4") ||
-                                      imagePath.endsWith(".mkv") ||
-                                      imagePath.endsWith(".webm") ||
-                                      imagePath.endsWith(".MOV");
-                                  Get.log("is video $isVideo");
-                                  if (isVideo) {
-                                    _initialStatusController
-                                        .generateThumbnail(
-                                            "${EnvironmentConstants.baseUrlforimage}$imagePath")
-                                        .then((value) {});
-                                    Get.log(
-                                        "thumbnial ${_initialStatusController.thumbnail}");
-
-                                    return Obx(() => GestureDetector(
-                                        onTap: () {
-                                          Get.log("tap");
-                                          Get.to(() => VideoPlay(
-                                                link:
-                                                    "${EnvironmentConstants.baseUrlforimage}$imagePath",
-                                              ));
-                                        },
-                                        child: Container(
-                                          height: 200.h,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: appTheme.blueGray400,
-                                            image: DecorationImage(
-                                              image: FileImage(File(
-                                                  _initialStatusController
-                                                      .thumbnail
-                                                      .value)), // Use FileImage
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          child: Center(
-                                              child: Icon(
-                                            Icons.play_arrow,
-                                            color: theme.colorScheme.primary,
-                                            size: 40.h,
-                                          )),
-                                        )));
-                                  } else {
-                                    // If it's not a video, display the image as before
-                                    return CustomImageView(
-                                      onTap: () {
-                                        Get.log(
-                                            "${EnvironmentConstants.baseUrlforimage}$imagePath");
-                                        // Get.to(() => ImageViewer(
-                                        //     imageUrl:
-                                        //         "${EnvironmentConstants.baseUrlforimage}${imagePath}"));
-                                      },
-                                      imagePath:
-                                          "${EnvironmentConstants.baseUrlforimage}$imagePath",
-                                      height: 182.v,
-                                      fit: BoxFit.cover,
-                                      width: 319.h,
-                                      radius: BorderRadius.circular(5.h),
-                                    );
-                                  }
-                                },
-                              );
-                            }).toList(),
-                          ),
-                          //  CarouselSlider(
-                          //   options: CarouselOptions(
-                          //     height: double
-                          //         .infinity, // Ensure the carousel itself takes full height
-                          //     viewportFraction: 1.0, // Each item takes full width
-                          //     autoPlay: true,
-                          //     // Add other CarouselOptions if needed
-                          //   ),
-                          //   items:
-                          //       //  widget.tripdetail.images
-                          //       mediaItems
-                          //           .map(
-                          //             (item) => Container(
-                          //               decoration: BoxDecoration(
-                          //                 gradient: LinearGradient(
-                          //                   begin: Alignment.topCenter,
-                          //                   end: Alignment.topCenter,
-                          //                   colors: [
-                          //                     Colors.transparent,
-                          //                     Colors.black.withOpacity(
-                          //                         0.3), // Adjust opacity as needed
-                          //                   ],
-                          //                 ),
-                          //               ),
-                          //               // height: 244.h,
-                          //               child: CustomImageView(
-                          //                 imagePath:
-                          //                     "${EnvironmentConstants.baseUrlforimage}$item",
-                          //                 fit: BoxFit.cover,
-                          //               ),
-                          //             ),
-                          //           )
-                          //           .toList(),
-                          // ),
-                        ),
-                        Positioned(
-                            bottom: 0,
-                            left: 40,
-                            right: 40,
-                            child: Container(
-                              width: 295.v,
-                              height: 60.h,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10.h, horizontal: 10.h),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(45.v),
-                                  color: Colors.white),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 80.v,
-                                        child: Stack(
-                                          children: [
-                                            Positioned(
-                                                left: 0,
-                                                child: CustomImageView(
-                                                  height: 34.h,
-                                                  imagePath:
-                                                      ImageConstant.profile,
-                                                )),
-                                            Positioned(
-                                                left: 20,
-                                                child: CustomImageView(
-                                                  height: 34.h,
-                                                  imagePath:
-                                                      ImageConstant.profile,
-                                                )),
-                                            Positioned(
-                                                left: 40,
-                                                child: CustomImageView(
-                                                  height: 34.h,
-                                                  imagePath:
-                                                      ImageConstant.profile,
-                                                )),
-                                          ],
-                                        ),
-                                      ),
-                                      Text(
-                                        "+${widget.tripdetail.userGoing.length}"
-                                        "  Going",
-                                        // '+20 Going',
-                                        style: TextStyle(
-                                          color: theme.colorScheme.primary,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(width: 30.v),
-                                  Container(
-                                    width: 65.v,
-                                    height: 28.h,
-                                    padding: EdgeInsets.all(6.v),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.v),
-                                        color: theme.colorScheme.primary),
-                                    child: Center(
-                                      child: Text(
-                                        "Invite",
-                                        style: TextStyle(
-                                          fontSize: 12.v,
-                                          color: appTheme.white,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ))
-                      ],
+                      // Other options...
                     ),
+                    items: mediaItems.map((imagePath) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          Get.log(imagePath);
+                          // Determine if the current item is a video
+                          bool isVideo = imagePath.endsWith(".mp4") ||
+                              imagePath.endsWith(".mkv") ||
+                              imagePath.endsWith(".webm") ||
+                              imagePath.endsWith(".MOV");
+                          Get.log("is video $isVideo");
+                          if (isVideo) {
+                            _initialStatusController
+                                .generateThumbnail(
+                                    "${EnvironmentConstants.baseUrlforimage}$imagePath")
+                                .then((value) {});
+                            Get.log(
+                                "thumbnial ${_initialStatusController.thumbnail}");
+
+                            return Obx(() => GestureDetector(
+                                onTap: () {
+                                  Get.log("tap");
+                                  Get.to(() => VideoPlay(
+                                        link:
+                                            "${EnvironmentConstants.baseUrlforimage}$imagePath",
+                                      ));
+                                },
+                                child: Container(
+                                  height: 200.h,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: appTheme.blueGray400,
+                                    image: DecorationImage(
+                                      image: FileImage(File(
+                                          _initialStatusController.thumbnail
+                                              .value)), // Use FileImage
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  child: Center(
+                                      child: Icon(
+                                    Icons.play_arrow,
+                                    color: theme.colorScheme.primary,
+                                    size: 40.h,
+                                  )),
+                                )));
+                          } else {
+                            // If it's not a video, display the image as before
+                            return CustomImageView(
+                              onTap: () {
+                                Get.log(
+                                    "${EnvironmentConstants.baseUrlforimage}$imagePath");
+                                // Get.to(() => ImageViewer(
+                                //     imageUrl:
+                                //         "${EnvironmentConstants.baseUrlforimage}${imagePath}"));
+                              },
+                              imagePath:
+                                  "${EnvironmentConstants.baseUrlforimage}$imagePath",
+                              height: 182.v,
+                              fit: BoxFit.cover,
+                              width: 319.h,
+                              radius: BorderRadius.circular(5.h),
+                            );
+                          }
+                        },
+                      );
+                    }).toList(),
                   ),
                 ),
                 SizedBox(
@@ -398,6 +269,86 @@ class _DetailScreenState extends State<TripDetailScreen> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 15.h),
+                      if (widget.tripdetail.userGoing.isNotEmpty)
+                        Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.only(
+                            top: 5,
+                          ),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: appTheme.blueGray400.withOpacity(0.4)),
+                          child: DataTable(
+                            columns: [
+                              DataColumn(
+                                  label: Text(
+                                'PAYMENT',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall
+                                    ?.copyWith(
+                                      fontSize: 12,
+                                    ),
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                'AMOUNT',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall
+                                    ?.copyWith(fontSize: 12),
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                'PERSON',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall
+                                    ?.copyWith(fontSize: 12),
+                              )),
+                            ],
+                            rows: widget.tripdetail
+                                .userGoing // Loops through dataColumnText, each iteration assigning the value to element
+                                .map(
+                                  ((element) => DataRow(
+                                        cells: <DataCell>[
+                                          DataCell(Text(
+                                            element.userId.fullname
+                                                .toUpperCase(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge
+                                                ?.copyWith(
+                                                  fontSize: 13,
+                                                ),
+                                          )), //Extracting from Map element the value
+
+                                          DataCell(Text(
+                                            " \$ ${element.amount}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge
+                                                ?.copyWith(
+                                                  fontSize: 13,
+                                                ),
+                                          )),
+                                          DataCell(Text(
+                                            "${element.totalPerson}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge
+                                                ?.copyWith(
+                                                  fontSize: 13,
+                                                ),
+                                          )),
+                                        ],
+                                      )),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      SizedBox(height: 15.h),
                     ],
                   ),
                 ),

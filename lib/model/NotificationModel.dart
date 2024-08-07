@@ -1,6 +1,6 @@
 class NotificationModel {
   NotificationModel({
-    required this.id,
+    this.id,
     required this.permanentDeleted,
     required this.title,
     required this.body,
@@ -9,7 +9,7 @@ class NotificationModel {
     required this.createdAt,
     required this.updatedAt,
   });
-  late final String id;
+  String? id;
   late final bool permanentDeleted;
   late final String title;
   late final String body;

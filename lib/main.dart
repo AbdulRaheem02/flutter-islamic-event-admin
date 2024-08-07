@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
+import 'package:islamic_event_admin/notification_services.dart';
 import 'core/app_export.dart';
 import 'core/utils/size_utils.dart';
 import 'screen/splash_screen/splashScreen.dart';
@@ -14,12 +17,19 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 // var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+
+  await Firebase.initializeApp();
+  pushnotiifcationInit();
   webViewSetting();
   setIntialSetup();
   setHighRefreshRate();
@@ -29,6 +39,14 @@ Future<void> main() async {
   configLoading();
 
   runApp(const MyApp());
+}
+
+NotificationServices notificationServices = NotificationServices();
+
+pushnotiifcationInit() {
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  notificationServices.requestNotificationPermission();
+  notificationServices.forgroundMessage();
 }
 
 webViewSetting() async {

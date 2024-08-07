@@ -41,7 +41,7 @@ class EventModel {
   late final OrganiserId organiserId;
   late final String about;
   late final String eventType;
-  late final List<dynamic> userGoing;
+  late final List<UserGoing> userGoing;
   late final String createdAt;
   late final String updatedAt;
   late final int _V;
@@ -67,7 +67,8 @@ class EventModel {
     // organiserId = OrganiserId.fromJson(json['organiserId']);
     about = json['about'];
     eventType = json['eventType'];
-    userGoing = List.castFrom<dynamic, dynamic>(json['userGoing']);
+    userGoing =
+        List.from(json['userGoing']).map((e) => UserGoing.fromJson(e)).toList();
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     _V = json['__v'];
@@ -82,6 +83,7 @@ class EventModel {
     data['title'] = title;
     data['organiserPic'] = organiserPic;
     data['organiserName'] = organiserName;
+    data['userGoing'] = userGoing.map((e) => e.toJson()).toList();
 
     data['pictures'] = images;
     data['videos'] = videos;
@@ -112,6 +114,56 @@ class OrganiserId {
   late final String fullname;
 
   OrganiserId.fromJson(Map<String, dynamic> json) {
+    id = json['_id'];
+    fullname = json['fullname'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['_id'] = id;
+    data['fullname'] = fullname;
+    return data;
+  }
+}
+
+class UserGoing {
+  UserGoing({
+    required this.userId,
+    required this.amount,
+    required this.totalPerson,
+    required this.id,
+  });
+  late final UserId userId;
+  late final int amount;
+  late final int totalPerson;
+  late final String id;
+
+  UserGoing.fromJson(Map<String, dynamic> json) {
+    userId = UserId.fromJson(json['userId']);
+    amount = json['amount'];
+    totalPerson = json['totalPerson'];
+    id = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['userId'] = userId.toJson();
+    data['amount'] = amount;
+    data['totalPerson'] = totalPerson;
+    data['_id'] = id;
+    return data;
+  }
+}
+
+class UserId {
+  UserId({
+    required this.id,
+    required this.fullname,
+  });
+  late final String id;
+  late final String fullname;
+
+  UserId.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     fullname = json['fullname'];
   }

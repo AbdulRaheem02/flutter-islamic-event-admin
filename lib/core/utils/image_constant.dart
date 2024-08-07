@@ -18,6 +18,8 @@ class ImageConstant {
   static String payment = '$imagePath/payment.svg';
   static String profile = '$imagePath/profile.png';
   static String project = '$imagePath/project.png';
+  static String islamicAppbar = '$imagePath/islamicAppbar.png';
+
   static String projects = '$imagePath/projects.svg';
   static String success = '$imagePath/success.svg';
   static String imageNotFound = '$imagePath/image_not_found.png';

@@ -101,6 +101,12 @@ class _AddMentorState extends State<AddMentor> {
                         CustomTextFormField(
                             controller: phoneController,
                             hintText: "Phone Number",
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter phone number';
+                              }
+                              return null;
+                            },
                             hintStyle: CustomTextStyles.bodySmall10,
                             textInputType: TextInputType.number),
                         SizedBox(height: 15.v),
@@ -240,6 +246,12 @@ class _AddMentorState extends State<AddMentor> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomTextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter full name';
+              }
+              return null;
+            },
             controller: userNameController,
             hintText: "Full name",
             hintStyle: CustomTextStyles.bodySmall10,
@@ -257,6 +269,12 @@ class _AddMentorState extends State<AddMentor> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomTextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter email';
+              }
+              return null;
+            },
             controller: emailController,
             hintText: "abc@email.com",
             hintStyle: CustomTextStyles.bodySmall10,
@@ -276,6 +294,12 @@ class _AddMentorState extends State<AddMentor> {
         children: [
           CustomTextFormField(
             maxLines: 7,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter description';
+              }
+              return null;
+            },
             controller: descriptionController,
             hintText: "Enter About",
             hintStyle: CustomTextStyles.bodySmall10,

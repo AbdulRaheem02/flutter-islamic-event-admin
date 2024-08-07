@@ -64,54 +64,55 @@ class _EventPageScreenState extends State<EventPageScreen> {
                         children: [
                           SizedBox(
                             height: 40.v,
-                            width: 40.v,
+                            width: 150.v,
                             child: CustomImageView(
-                              imagePath: ImageConstant.logo,
+                              imagePath: ImageConstant.islamicAppbar,
+                              fit: BoxFit.fill,
                             ),
                           ),
-                          SizedBox(width: 7.v),
-                          Text(
-                            """PROPHETIC
-PATH DANMARK""",
-                            style: theme.textTheme.bodyLarge!.copyWith(
-                                color: appTheme.black900,
-                                fontSize: 15.fSize,
-                                fontWeight: FontWeight.bold),
-                          )
+//                           SizedBox(width: 7.v),
+//                           Text(
+//                             """PROPHETIC
+// PATH DANMARK""",
+//                             style: theme.textTheme.bodyLarge!.copyWith(
+//                                 color: appTheme.black900,
+//                                 fontSize: 15.fSize,
+//                                 fontWeight: FontWeight.bold),
+//                           )
                         ],
                       ),
                       Row(
                         children: [
-                          // InkWell(
-                          //   onTap: () async {
-                          //     // Get.offAll(() => const SignInScreen());
-                          //     await showModalBottomSheet(
-                          //         context: Get.context!,
-                          //         builder: (context) {
-                          //           return const infoPage();
-                          //         });
-                          //   },
-                          //   child: appbarItemicon(
-                          //     decoration: BoxDecoration(
-                          //         shape: BoxShape.circle,
-                          //         color: theme.colorScheme.primary),
-                          //     icon: ImageConstant.info,
-                          //   ),
-                          // ),
-                          // SizedBox(width: 4.v),
-                          // InkWell(
-                          //   onTap: () {
-                          //     _initialStatusController
-                          //         .getallnotifications()
-                          //         .then((val) {
-                          //       Get.to(() => NotificationScreen());
-                          //     });
-                          //   },
-                          //   child: appbarItemicon(
-                          //     icon: ImageConstant.notification,
-                          //   ),
-                          // ),
-                          // SizedBox(width: 4.v),
+                          InkWell(
+                            onTap: () async {
+                              // Get.offAll(() => const SignInScreen());
+                              await showModalBottomSheet(
+                                  context: Get.context!,
+                                  builder: (context) {
+                                    return const infoPage();
+                                  });
+                            },
+                            child: appbarItemicon(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: theme.colorScheme.primary),
+                              icon: ImageConstant.info,
+                            ),
+                          ),
+                          SizedBox(width: 4.v),
+                          InkWell(
+                            onTap: () {
+                              _initialStatusController
+                                  .getallnotifications()
+                                  .then((val) {
+                                Get.to(() => NotificationScreen());
+                              });
+                            },
+                            child: appbarItemicon(
+                              icon: ImageConstant.notification,
+                            ),
+                          ),
+                          SizedBox(width: 4.v),
                           InkWell(
                             onTap: () async {
                               showDialog(

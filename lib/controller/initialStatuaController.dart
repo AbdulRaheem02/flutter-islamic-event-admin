@@ -147,6 +147,8 @@ class InitialStatusController extends GetxController {
   }
 
   Future<void> getallnotifications() async {
+    allnotificationlist.clear();
+
     Get.log("++++++++++ get api call");
     notificationnf(false);
     apiRepository.getallnotification().getResponse((response) {
