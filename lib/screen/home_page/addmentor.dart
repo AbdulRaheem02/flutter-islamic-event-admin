@@ -189,7 +189,7 @@ class _AddMentorState extends State<AddMentor> {
                                 });
                               }
                             } else {
-                              flutterToast("Please Upload Pdf");
+                              flutterToast("Please Upload Profile");
                             }
                           },
                           text: "Add Mentor",

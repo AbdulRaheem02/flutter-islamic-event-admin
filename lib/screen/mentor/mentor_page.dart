@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:islamic_event_admin/controller/initialStatuaController.dart';
 import 'package:islamic_event_admin/core/app_export.dart';
 import 'package:islamic_event_admin/model/MemberModel.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 
@@ -28,13 +30,32 @@ class MentorListPage extends StatefulWidget {
 class _MentorListPageState extends State<MentorListPage> {
   final InitialStatusController _initialStatusController =
       Get.find<InitialStatusController>();
+  final ScrollController _scrollController = ScrollController();
+
+  // List<bool> _initialStatusController.isExpandedList = [];
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
     _initialStatusController.allmemberlist.clear();
     _initialStatusController.getallmentor();
 
-    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.atEdge) {
+      bool isTop = _scrollController.position.pixels == 0;
+      if (!isTop) {
+        // print("You have reached the end of the list");
+
+        if (_initialStatusController.isMoreDataAvailableMentor.value &&
+            !_initialStatusController.isLoadingMentor.value) {
+          EasyLoading.show();
+          _initialStatusController.getallmentor(
+              page: _initialStatusController.currentPageMenotr.value + 1);
+        }
+      }
+    }
   }
 
   @override
@@ -42,6 +63,7 @@ class _MentorListPageState extends State<MentorListPage> {
     return Scaffold(
       appBar: _buildAppBar(context),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: [
             const SizedBox(
@@ -50,8 +72,11 @@ class _MentorListPageState extends State<MentorListPage> {
             Obx(
               () => _initialStatusController.membernf.value == true &&
                       _initialStatusController.allmemberlist.isEmpty
-                  ? const Center(
-                      child: Text("Not Available"),
+                  ? SizedBox(
+                      height: 500.h,
+                      child: const Center(
+                        child: Text("Not Available"),
+                      ),
                     )
                   : _initialStatusController.allmemberlist.isEmpty
                       ? buildShimmerEffectColumn(height: 100.h, length: 5)
@@ -63,23 +88,29 @@ class _MentorListPageState extends State<MentorListPage> {
                           itemBuilder: (context, index) {
                             MemberModel memberdetail =
                                 _initialStatusController.allmemberlist[index];
-                            return MentorTile(
-                              memberdetail: memberdetail,
-                            );
+                            return _initialStatusController
+                                    .isExpandedList.isNotEmpty
+                                ? MentorTile(
+                                    memberdetail: memberdetail,
+                                    isExpanded: _initialStatusController
+                                        .isExpandedList[index],
+                                    onExpansionChanged: (bool expanded) {
+                                      setState(() {
+                                        _initialStatusController
+                                                .isExpandedList.value =
+                                            List.filled(
+                                                _initialStatusController
+                                                    .isExpandedList.length,
+                                                false);
+                                        _initialStatusController
+                                            .isExpandedList[index] = expanded;
+                                      });
+                                    },
+                                  )
+                                : Container();
                           },
                         ),
             )
-            // ClipRect(
-            //   child: BackdropFilter(
-            //     // filter: ImageFilter.blur(sigmaX: -3.0, sigmaY: 1.0),
-            //     filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-            //     child: Container(
-            //       height: 100.0, // Adjust the height as needed
-            //       color: Colors.black.withOpacity(
-            //           0.2), // Adjust the opacity and color as needed
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -99,19 +130,21 @@ class _MentorListPageState extends State<MentorListPage> {
 }
 
 class MentorTile extends StatefulWidget {
-  MemberModel memberdetail;
-  MentorTile({
+  final MemberModel memberdetail;
+  final bool isExpanded;
+  final ValueChanged<bool> onExpansionChanged;
+
+  const MentorTile({
     required this.memberdetail,
+    required this.isExpanded,
+    required this.onExpansionChanged,
     super.key,
   });
-
   @override
   _MentorTileState createState() => _MentorTileState();
 }
 
 class _MentorTileState extends State<MentorTile> {
-  bool _isExpanded = false;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -129,28 +162,28 @@ class _MentorTileState extends State<MentorTile> {
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
-                    side: const BorderSide(
-                      color: Colors.transparent,
+                    side: BorderSide(
+                      color: widget.isExpanded
+                          ? theme.colorScheme.primary.withOpacity(0.6)
+                          : Colors.transparent,
                       width: 2,
                     ),
                   ),
                 ),
                 child: ExpansionTile(
                   tilePadding: EdgeInsets.only(right: 5.v),
-                  initiallyExpanded: _isExpanded,
+                  initiallyExpanded: widget.isExpanded,
                   trailing: Container(
                     // color: Colors.amberAccent,
                     child: Icon(
-                      _isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                      widget.isExpanded
+                          ? Icons.arrow_drop_up
+                          : Icons.arrow_drop_down,
                       color: appTheme.gray500,
                       size: 30.h,
                     ),
                   ),
-                  onExpansionChanged: (bool expanded) {
-                    setState(() {
-                      _isExpanded = expanded;
-                    });
-                  },
+                  onExpansionChanged: widget.onExpansionChanged,
                   title: Column(
                     children: [
                       Row(
@@ -180,8 +213,8 @@ class _MentorTileState extends State<MentorTile> {
                                   },
                                   imagePath:
                                       "${EnvironmentConstants.baseUrlforimage}${widget.memberdetail.image}",
-                                  height: 70.adaptSize,
-                                  width: 70.adaptSize,
+                                  height: 90.adaptSize,
+                                  width: 90.adaptSize,
                                   margin: EdgeInsets.only(
                                     top: 2.v,
                                     bottom: 2.v,
@@ -203,7 +236,7 @@ class _MentorTileState extends State<MentorTile> {
                                       style: theme.textTheme.bodyLarge!
                                           .copyWith(
                                               color: appTheme.gray400,
-                                              fontSize: 12.h,
+                                              fontSize: 15.h,
                                               fontWeight: FontWeight.w400),
                                     ),
                                     Text(
@@ -211,10 +244,10 @@ class _MentorTileState extends State<MentorTile> {
                                       style: theme.textTheme.bodyLarge!
                                           .copyWith(
                                               color: appTheme.blackheading,
-                                              fontSize: 14.h,
+                                              fontSize: 17.h,
                                               fontWeight: FontWeight.w700),
                                     ),
-                                    if (_isExpanded)
+                                    if (widget.isExpanded)
                                       SizedBox(
                                         // color: Colors.amber,
                                         width: 300.v,
@@ -226,32 +259,38 @@ class _MentorTileState extends State<MentorTile> {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () async {
-                                                    final Email email = Email(
-                                                      body:
-                                                          'Download Islamic Event',
-                                                      subject: 'Download',
-                                                      recipients: [
-                                                        widget
-                                                            .memberdetail.email
-                                                      ],
-                                                      cc: ['cc@example.com'],
-                                                      bcc: ['bcc@example.com'],
-                                                      // attachmentPaths: ['/path/to/attachment.zip'],
-                                                      // isHTML: false,
-                                                    );
+                                                    // final Email email = Email(
+                                                    //   body:
+                                                    //       'Download Islamic Event',
+                                                    //   subject: 'Download',
+                                                    //   recipients: [
+                                                    //     widget
+                                                    //         .memberdetail.email
+                                                    //   ],
+                                                    //   // cc: ['cc@example.com'],
+                                                    //   // bcc: ['bcc@example.com'],
+                                                    // );
 
-                                                    try {
-                                                      await FlutterEmailSender
-                                                          .send(email);
-                                                    } catch (error) {
-                                                      print(error);
-                                                    }
+                                                    // try {
+                                                    //   await FlutterEmailSender
+                                                    //       .send(email);
+                                                    // } catch (error) {
+                                                    //   print(error);
+                                                    // }
+                                                    Get.find<
+                                                            InitialStatusController>()
+                                                        .sendSms(
+                                                            widget.memberdetail
+                                                                .phone,
+                                                            "");
                                                   },
                                                   child: Container(
-                                                    width: 100.v,
+                                                    // width: 100.v,
                                                     // height: 28.h,
                                                     padding:
-                                                        EdgeInsets.all(4.v),
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 5.v,
+                                                            vertical: 4),
                                                     decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
@@ -278,6 +317,22 @@ class _MentorTileState extends State<MentorTile> {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () async {
+                                                    Get.find<
+                                                            InitialStatusController>()
+                                                        .whatsappLaunchURL(
+                                                            widget.memberdetail
+                                                                .phone);
+                                                  },
+                                                  child: appbarItemicon(
+                                                    height: 25.v,
+                                                    width: 25.v,
+                                                    icon:
+                                                        ImageConstant.whatsapp,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 4.v),
+                                                GestureDetector(
+                                                  onTap: () async {
                                                     final Uri launchUri = Uri(
                                                       scheme: 'tel',
                                                       path: widget
@@ -293,7 +348,10 @@ class _MentorTileState extends State<MentorTile> {
                                                 ),
                                                 SizedBox(width: 4.v),
                                                 InkWell(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    Share.share(widget
+                                                        .memberdetail.about);
+                                                  },
                                                   child: appbarItemicon(
                                                     height: 25.v,
                                                     width: 25.v,
@@ -348,7 +406,7 @@ class _MentorTileState extends State<MentorTile> {
                                                       color: Colors.red,
                                                     ),
                                                   ),
-                                                ),
+                                                )
                                               ],
                                             ),
                                           ],
@@ -389,25 +447,6 @@ class _MentorTileState extends State<MentorTile> {
                             );
                           }),
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     featurewidget(
-                    //       title: 'Sunnah Healing',
-                    //     ),
-                    //     featurewidget(
-                    //       title: 'Appointment',
-                    //     ),
-                    //     featurewidget(
-                    //       width: 55.v,
-                    //       title: 'Nikkah',
-                    //     ),
-                    //     featurewidget(
-                    //       width: 55.v,
-                    //       title: 'Speech',
-                    //     ),
-                    //   ],
-                    // ),
                     Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 10.v, vertical: 5.v),
@@ -422,7 +461,7 @@ class _MentorTileState extends State<MentorTile> {
                                 textAlign: TextAlign.start,
                                 style: theme.textTheme.bodyLarge!.copyWith(
                                     color: appTheme.blackheading,
-                                    fontSize: 14.h,
+                                    fontSize: 16.h,
                                     fontWeight: FontWeight.w700),
                               ),
                             ],
@@ -431,8 +470,8 @@ class _MentorTileState extends State<MentorTile> {
                             widget.memberdetail.about,
                             textAlign: TextAlign.start,
                             style: theme.textTheme.bodyLarge!.copyWith(
-                                color: appTheme.gray400,
-                                fontSize: 12.h,
+                                color: appTheme.gray500,
+                                fontSize: 14.h,
                                 fontWeight: FontWeight.w400),
                           ),
                         ],
@@ -477,7 +516,7 @@ class featurewidget extends StatelessWidget {
           title,
           style: theme.textTheme.bodyLarge!.copyWith(
               color: theme.colorScheme.primary,
-              fontSize: 10.h,
+              fontSize: 13.h,
               fontWeight: FontWeight.w500),
         ),
       ),

@@ -8,7 +8,7 @@ class ApiConstant {
 
   static const getuserlist = "users";
   static const registeruser = "register";
-  static const loginuser = "login";
+  static const loginuser = "loginAdmin";
   static const forgetPassword = "forgetPasswordOtp";
   static const resendOtp = "resendOtp";
   static const verifyForgotPasswordOtp = "verifyForgotPasswordOtp";

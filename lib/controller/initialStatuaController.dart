@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:islamic_event_admin/api-handler/api-extention.dart';
+import 'package:islamic_event_admin/custom_widgets/InternalStorage.dart';
 import 'package:islamic_event_admin/model/BookModel.dart';
 import 'package:islamic_event_admin/model/MemberModel.dart';
 import 'package:islamic_event_admin/model/NotificationModel.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as Deo;
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../api-handler/api-repo.dart';
@@ -52,12 +54,23 @@ class InitialStatusController extends GetxController {
   String latitude = "", longitude = "";
   @override
   Future<void> onInit() async {
-    await getprofiledetail();
-    getallevent();
-    getalltrip();
+    init();
+
     // getallproject();
     // getallbook();
     super.onInit();
+  }
+
+  Future<void> init() async {
+    String token = await getAccessToken();
+
+    // clearEveryThing();
+    Get.log("token = $token");
+    if (token != "") {
+      await getprofiledetail();
+      getallevent();
+      getalltrip();
+    }
   }
 
   var userProfile = List<UserProfile>.empty(growable: true).obs;
@@ -166,20 +179,46 @@ class InitialStatusController extends GetxController {
     });
   }
 
-  Future<void> getallbook() async {
-    booknf(false);
+  var currentPageBook = 1.obs;
+  var isMoreDataAvailableBook = true.obs;
+  var isLoadingBook = false.obs;
+  Future<void> getallbook({int page = 1, int limit = 8}) async {
+    if (page == 1) {
+      currentPageBook = 1.obs;
+      isMoreDataAvailableBook = true.obs;
+      isLoadingBook = false.obs;
+      booknf(false);
+    } else {
+      EasyLoading.show();
+    }
+    isLoadingBook.value = true;
 
     Get.log("++++++++++ get api call");
 
-    apiRepository.getallbooks().getResponse((response) {
+    apiRepository
+        .getallbooks(page.toString(), limit.toString())
+        .getResponse((response) {
       if (response.statusCode == 200) {
         Get.log("++++++++++ ${response.data}");
 
         List listData = response.data['data'];
         var parsingList = listData.map((m) => BookModel.fromJson(m)).toList();
-        allbooklist.clear();
-        allbooklist.addAll(parsingList);
+        if (page == 1) {
+          allbooklist.clear();
+        }
+
+        if (parsingList.isNotEmpty) {
+          allbooklist.addAll(parsingList);
+          currentPageBook.value = page;
+        } else {
+          isMoreDataAvailableBook(false);
+        }
+
+        EasyLoading.dismiss();
+
         booknf(true);
+        isLoadingBook.value = false;
+
         update();
       }
     });
@@ -202,56 +241,165 @@ class InitialStatusController extends GetxController {
     });
   }
 
-  Future<void> getallmentor() async {
+  var currentPageMenotr = 1.obs;
+  var isMoreDataAvailableMentor = true.obs;
+  var isLoadingMentor = false.obs;
+
+  var isExpandedList = List<bool>.empty(growable: true).obs;
+
+  Future<void> getallmentor({int page = 1, int limit = 10}) async {
+    if (page == 1) {
+      currentPageMenotr = 1.obs;
+      isMoreDataAvailableMentor = true.obs;
+      isLoadingMentor = false.obs;
+      membernf(false);
+    } else {
+      EasyLoading.show();
+    }
+    isLoadingMentor.value = true;
     Get.log("++++++++++ get api call");
-    membernf(false);
-    apiRepository.getallmentors().getResponse((response) {
+
+    await apiRepository
+        .getallmentors(page.toString(), limit.toString())
+        .getResponse((response) {
       if (response.statusCode == 200) {
         Get.log("++++++++++ ${response.data}");
 
         List listData = response.data['data'];
         var parsingList = listData.map((m) => MemberModel.fromJson(m)).toList();
-        allmemberlist.clear();
-        allmemberlist.addAll(parsingList);
-        membernf(true);
+        if (page == 1) {
+          allmemberlist.clear();
+        }
 
+        if (parsingList.isNotEmpty) {
+          allmemberlist.addAll(parsingList);
+          currentPageMenotr.value = page;
+        } else {
+          isMoreDataAvailableMentor(false);
+        }
+
+        EasyLoading.dismiss();
+
+        membernf(true);
+        isLoadingMentor.value = false;
+        updateIsExpandedList();
         update();
       }
     });
   }
 
-  Future<void> getallevent() async {
+  void updateIsExpandedList() {
+    isExpandedList.value = List.filled(allmemberlist.length, false);
+  }
+
+  whatsappLaunchURL(String phoneNumber) async {
+    var url =
+        'https://api.whatsapp.com/send/?phone=$phoneNumber&text&type=phone_number&app_absent=0';
+    if (await launch(url)) {
+      await canLaunch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void sendSms(String phoneNumber, String message) async {
+    // Android
+    String url;
+    //  'sms:+39 348 060 888?body=hello%20there';
+    if (Platform.isAndroid) {
+      //FOR Android
+      url = 'sms:$phoneNumber?body=$message';
+      await launch(url);
+    } else if (Platform.isIOS) {
+      //FOR IOS
+      url = 'sms:$phoneNumber&body=$message';
+    }
+  }
+
+  var currentPage = 1.obs;
+  var isMoreDataAvailable = true.obs;
+  var isLoading = false.obs;
+  Future<void> getallevent({int page = 1, int limit = 5}) async {
     Get.log("++++++++++ get api call");
-    eventnf(false);
-    apiRepository.getallevent().getResponse((response) {
+    if (page == 1) {
+      currentPage = 1.obs;
+      isMoreDataAvailable = true.obs;
+      isLoading = false.obs;
+      eventnf(false);
+    } else {
+      EasyLoading.show();
+    }
+    isLoading.value = true;
+    apiRepository
+        .getallevent(page.toString(), limit.toString())
+        .getResponse((response) {
       if (response.statusCode == 200) {
         Get.log("++++++++++ ${response.data}");
         //  var resData = AllUser.fromJson(response.data);
+        EasyLoading.dismiss();
         List listData = response.data['data'];
         var parsingList = listData.map((m) => EventModel.fromJson(m)).toList();
-        alleventlist.clear();
-        alleventlist.addAll(parsingList);
+        if (page == 1) {
+          alleventlist.clear();
+        }
+
+        if (parsingList.isNotEmpty) {
+          alleventlist.addAll(parsingList);
+          currentPage.value = page;
+        } else {
+          isMoreDataAvailable(false);
+        }
+        // alleventlist.clear();
+        // alleventlist.addAll(parsingList);
+        EasyLoading.dismiss();
+
         eventnf(true);
         update();
+        isLoading.value = false;
       }
     });
   }
 
-  Future<void> getalltrip() async {
+  var currentPageTrip = 1.obs;
+  var isMoreDataAvailableTrip = true.obs;
+  var isLoadingTrip = false.obs;
+
+  Future<void> getalltrip({int page = 1, int limit = 5}) async {
     Get.log("++++++++++ get api call");
-    tripnf(false);
-    apiRepository.getalltrip().getResponse((response) {
+    if (page == 1) {
+      currentPageTrip = 1.obs;
+      isMoreDataAvailableTrip = true.obs;
+      isLoadingTrip = false.obs;
+      tripnf(false);
+    } else {
+      EasyLoading.show();
+    }
+    isLoadingTrip.value = true;
+    apiRepository
+        .getalltrip(page.toString(), limit.toString())
+        .getResponse((response) {
       if (response.statusCode == 200) {
         Get.log("++++++++++ ${response.data}");
         //  var resData = AllUser.fromJson(response.data);
         List listData = response.data['data'];
         var parsingList = listData.map((m) => EventModel.fromJson(m)).toList();
-        alltriplist.clear();
-        alltriplist.addAll(parsingList);
+        if (page == 1) {
+          alltriplist.clear();
+        }
+
+        if (parsingList.isNotEmpty) {
+          alltriplist.addAll(parsingList);
+          currentPageTrip.value = page;
+        } else {
+          isMoreDataAvailableTrip(false);
+        }
+        EasyLoading.dismiss();
+
         tripnf(true);
 
         update();
       }
+      isLoadingTrip.value = false;
     });
   }
 
@@ -289,17 +437,41 @@ class InitialStatusController extends GetxController {
     });
   }
 
-  Future<void> getallproject() async {
+  var currentPageProject = 1.obs;
+  var isMoreDataAvailableProject = true.obs;
+  var isLoadingProject = false.obs;
+  Future<void> getallproject({int page = 1, int limit = 5}) async {
     Get.log("++++++++++ get api call");
-    projectnf(false);
-    apiRepository.getallproject().getResponse((response) {
+
+    if (page == 1) {
+      currentPageProject = 1.obs;
+      isMoreDataAvailableProject = true.obs;
+      isLoadingProject = false.obs;
+      projectnf(false);
+    } else {
+      EasyLoading.show();
+    }
+    // isLoadingProject.value = true;
+    apiRepository
+        .getallproject(page.toString(), limit.toString())
+        .getResponse((response) {
       if (response.statusCode == 200) {
         Get.log("++++++++++ ${response.data}");
         List listData = response.data['data'];
         var parsingList =
             listData.map((m) => ProjectModel.fromJson(m)).toList();
-        allprojectlist.clear();
-        allprojectlist.addAll(parsingList);
+        if (page == 1) {
+          allprojectlist.clear();
+        }
+
+        if (parsingList.isNotEmpty) {
+          allprojectlist.addAll(parsingList);
+          currentPageProject.value = page;
+        } else {
+          isMoreDataAvailableProject(false);
+        }
+        EasyLoading.dismiss();
+
         projectnf(true);
         update();
       }

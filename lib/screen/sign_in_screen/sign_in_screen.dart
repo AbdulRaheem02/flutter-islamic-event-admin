@@ -142,7 +142,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               _authController.login({
                                 "email": emailController.text,
                                 "password": passwordController.text,
-                                "role": "Admin",
+                                // "role": "Admin",
                                 "deviceToken": token
                               });
                             }

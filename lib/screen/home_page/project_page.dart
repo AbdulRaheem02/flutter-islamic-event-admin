@@ -1,3 +1,4 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:islamic_event_admin/core/app_export.dart';
 import 'package:islamic_event_admin/model/ProjectModel.dart';
 import 'package:islamic_event_admin/screen/details/donation_detail_page.dart';
@@ -26,13 +27,39 @@ class ProjectsScreen extends StatefulWidget {
 class _ProjectsScreenState extends State<ProjectsScreen> {
   final InitialStatusController _initialStatusController =
       Get.find<InitialStatusController>();
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     // TODO: implement initState
     _initialStatusController.allprojectlist.clear();
     _initialStatusController.getallproject();
+    _scrollController.addListener(_scrollListener);
 
     super.initState();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.atEdge) {
+      bool isTop = _scrollController.position.pixels == 0;
+      if (!isTop) {
+        // print("You have reached the end of the list");
+
+        if (_initialStatusController.isMoreDataAvailableProject.value &&
+            !_initialStatusController.isLoadingProject.value) {
+          EasyLoading.show();
+          _initialStatusController.getallproject(
+              page: _initialStatusController.currentPageProject.value + 1);
+        }
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,12 +74,16 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         child: Obx(
           () => _initialStatusController.projectnf.value == true &&
                   _initialStatusController.allprojectlist.isEmpty
-              ? const Center(
-                  child: Text("Not Available"),
+              ? SizedBox(
+                  height: 500.h,
+                  child: const Center(
+                    child: Text("Not Available"),
+                  ),
                 )
               : _initialStatusController.allprojectlist.isEmpty
                   ? buildShimmerEffectColumn(height: 190.h, length: 3)
                   : ListView.builder(
+                      controller: _scrollController,
                       itemCount: _initialStatusController.allprojectlist.length,
                       shrinkWrap: true,
                       // physics: const NeverScrollableScrollPhysics(),
@@ -104,91 +135,96 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                   SizedBox(
                                     height: 5.h,
                                   ),
-                                  Column(
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          SizedBox(
-                                            width: 244.v,
-                                            child: Text(
-                                              project.title,
-                                              style: TextStyle(
-                                                fontSize: 16.v,
-                                                color: appTheme.blackText,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.w600,
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                width: 244.v,
+                                                child: Text(
+                                                  project.title,
+                                                  style: TextStyle(
+                                                    fontSize: 16.v,
+                                                    color: appTheme.blackText,
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title:
-                                                        const Text('Project'),
-                                                    content: const Text(
-                                                        'Are you sure you want to delete?'),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop(); // Close the dialog
-                                                        },
-                                                        child: const Text(
-                                                            'Cancel'),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () async {
-                                                          Get.back();
-                                                          _initialStatusController
-                                                              .deleteProject(
-                                                                  project.id);
-                                                        },
-                                                        child: const Text(
-                                                            'Delete'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            child: const Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
+                                          Row(
+                                            children: [
+                                              CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.calendartime,
+                                                color: appTheme.blackText,
                                               ),
-                                            ),
+                                              SizedBox(width: 4.v),
+                                              Text(
+                                                // "November 15 2024",
+                                                Get.find<
+                                                        InitialStatusController>()
+                                                    .formatDate(DateTime.parse(
+                                                        project.createdAt)),
+
+                                                style: TextStyle(
+                                                  fontSize: 12.v,
+                                                  color: appTheme.blackText,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          CustomImageView(
-                                            imagePath:
-                                                ImageConstant.calendartime,
-                                            color: appTheme.blackText,
+                                      GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: const Text('Project'),
+                                                content: const Text(
+                                                    'Are you sure you want to delete?'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(); // Close the dialog
+                                                    },
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      Get.back();
+                                                      _initialStatusController
+                                                          .deleteProject(
+                                                              project.id);
+                                                    },
+                                                    child: const Text('Delete'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
                                           ),
-                                          SizedBox(width: 4.v),
-                                          Text(
-                                            // "November 15 2024",
-                                            Get.find<InitialStatusController>()
-                                                .formatDate(DateTime.parse(
-                                                    project.createdAt)),
-
-                                            style: TextStyle(
-                                              fontSize: 12.v,
-                                              color: appTheme.blackText,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ],
                                   ),

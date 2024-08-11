@@ -19,21 +19,22 @@ class ApiRepository {
         .execute((response) => response);
   }
 
-  Future getallevent() async {
+  Future getallevent(String page, String limit) async {
     return _apiHelper
-        .get(ApiConstant.getAllEvents)
+        // .get(ApiConstant.getAllEvents)
+        .getWithParamUrl(ApiConstant.getAllEvents, "?page=$page&limit=$limit")
         .execute((response) => response);
   }
 
-  Future getalltrip() async {
+  Future getalltrip(String page, String limit) async {
     return _apiHelper
-        .get(ApiConstant.getAllTrips)
+        .getWithParamUrl(ApiConstant.getAllTrips, "?page=$page&limit=$limit")
         .execute((response) => response);
   }
 
-  Future getallbooks() async {
+  Future getallbooks(String page, String limit) async {
     return _apiHelper
-        .get(ApiConstant.getAllBooks)
+        .getWithParamUrl(ApiConstant.getAllBooks, "?page=$page&limit=$limit")
         .execute((response) => response);
   }
 
@@ -44,9 +45,10 @@ class ApiRepository {
         .execute((response) => response);
   }
 
-  Future getallmentors() async {
+  Future getallmentors(String page, String limit) async {
     return _apiHelper
-        .get(ApiConstant.getAllMentor)
+        // .get(ApiConstant.getAllMentor)
+        .getWithParamUrl(ApiConstant.getAllMentor, "?page=$page&limit=$limit")
         .execute((response) => response);
   }
 
@@ -68,9 +70,10 @@ class ApiRepository {
         .execute((response) => response);
   }
 
-  Future getallproject() async {
+  Future getallproject(String page, String limit) async {
     return _apiHelper
-        .get(ApiConstant.getAllProjects)
+        // .get(ApiConstant.getAllProjects)
+        .getWithParamUrl(ApiConstant.getAllProjects, "?page=$page&limit=$limit")
         .execute((response) => response);
   }
 
