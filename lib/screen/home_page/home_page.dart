@@ -99,26 +99,26 @@ class _EventPageScreenState extends State<EventPageScreen> {
                     children: [
                       Row(
                         children: [
-                          // SizedBox(
-                          //   height: 40.v,
-                          //   width: 150.v,
-                          //   child: CustomImageView(
-                          //     imagePath: ImageConstant.islamicAppbar,
-                          //     fit: BoxFit.fill,
-                          //   ),
-                          // ),
+                          SizedBox(
+                            height: 40.v,
+                            width: 150.v,
+                            child: CustomImageView(
+                              imagePath: ImageConstant.islamicAppbar,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
 //                           SizedBox(width: 7.v),
-                          Obx(() => Text(
-                                _initialStatusController.userProfile.isNotEmpty
-                                    ? _initialStatusController
-                                        .userProfile.first.data.email
-                                        .toString()
-                                    : "",
-                                style: theme.textTheme.bodyLarge!.copyWith(
-                                    color: appTheme.black900,
-                                    fontSize: 15.fSize,
-                                    fontWeight: FontWeight.bold),
-                              ))
+                          // Obx(() => Text(
+                          //       _initialStatusController.userProfile.isNotEmpty
+                          //           ? _initialStatusController
+                          //               .userProfile.first.data.email
+                          //               .toString()
+                          //           : "",
+                          //       style: theme.textTheme.bodyLarge!.copyWith(
+                          //           color: appTheme.black900,
+                          //           fontSize: 15.fSize,
+                          //           fontWeight: FontWeight.bold),
+                          //     ))
                         ],
                       ),
                       Row(

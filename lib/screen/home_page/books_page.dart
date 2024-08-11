@@ -221,6 +221,7 @@ class _BooksScreenState extends State<BooksScreen> {
                                         children: [
                                           Text(
                                             book.title,
+                                            maxLines: 1,
                                             style: TextStyle(
                                               fontSize: 13.v,
                                               color: appTheme.blackheading,

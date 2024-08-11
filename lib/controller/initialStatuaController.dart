@@ -319,7 +319,7 @@ class InitialStatusController extends GetxController {
   var currentPage = 1.obs;
   var isMoreDataAvailable = true.obs;
   var isLoading = false.obs;
-  Future<void> getallevent({int page = 1, int limit = 5}) async {
+  Future<void> getallevent({int page = 1, int limit = 3}) async {
     Get.log("++++++++++ get api call");
     if (page == 1) {
       currentPage = 1.obs;

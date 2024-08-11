@@ -41,7 +41,7 @@ class AuthController extends GetxController {
       if (reponse.statusCode == 200) {
         flutterToast("${reponse.data['message']}");
 
-        // saveAccessToken(reponse.data['token']);
+        saveAccessToken(reponse.data['token']);
         Get.to(() => const HomePage(), binding: IntialBinding());
       }
     });
