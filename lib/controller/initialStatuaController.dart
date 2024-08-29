@@ -497,7 +497,7 @@ class InitialStatusController extends GetxController {
     });
   }
 
-  Future<String> getPdfPath(String filepath) async {
+  Future<String> getPdfPath(String filepath, String fileName) async {
     EasyLoading.show();
     Completer<File> completer = Completer();
     final url = filepath.toString();
@@ -513,9 +513,7 @@ class InitialStatusController extends GetxController {
 
     await file.writeAsBytes(bytes, flush: true);
     EasyLoading.dismiss();
-    Get.to(() => PDFScreen(
-          path: file.path,
-        ));
+    Get.to(() => PDFScreen(path: file.path, url: filepath, fileName: fileName));
 
     completer.complete(file);
     return file.path;

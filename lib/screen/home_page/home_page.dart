@@ -111,8 +111,7 @@ class _EventPageScreenState extends State<EventPageScreen> {
                           // Obx(() => Text(
                           //       _initialStatusController.userProfile.isNotEmpty
                           //           ? _initialStatusController
-                          //               .userProfile.first.data.email
-                          //               .toString()
+                          //               .userProfile.first.data.firstName
                           //           : "",
                           //       style: theme.textTheme.bodyLarge!.copyWith(
                           //           color: appTheme.black900,
@@ -610,9 +609,15 @@ class CustomEvent extends StatelessWidget {
                 child: CustomImageView(
                   fit: BoxFit.fill,
                   onTap: () {
-                    Get.log(eventData.images.length.toString());
-                    Get.log(
-                        "${EnvironmentConstants.baseUrlforimage}${eventData.images.last}");
+                    Get.find<InitialStatusController>()
+                        .getEventById(eventId: eventData.id)
+                        .then((value) async {
+                      Get.to(() => DetailScreen(
+                            eventdetail: Get.find<InitialStatusController>()
+                                .eventbyId
+                                .first,
+                          ));
+                    });
                   },
                   imagePath: eventData.images.isEmpty
                       ? ImageConstant.event
@@ -691,7 +696,6 @@ class CustomEvent extends StatelessWidget {
                       });
                     },
                     child: Container(
-                      width: 80.v,
                       height: 28.h,
                       padding: EdgeInsets.all(6.v),
                       decoration: BoxDecoration(

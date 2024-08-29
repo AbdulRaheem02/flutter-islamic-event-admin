@@ -232,14 +232,6 @@ class _MentorTileState extends State<MentorTile> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Mazbi Scholars",
-                                      style: theme.textTheme.bodyLarge!
-                                          .copyWith(
-                                              color: appTheme.gray400,
-                                              fontSize: 15.h,
-                                              fontWeight: FontWeight.w400),
-                                    ),
-                                    Text(
                                       widget.memberdetail.fullname,
                                       style: theme.textTheme.bodyLarge!
                                           .copyWith(
@@ -247,171 +239,14 @@ class _MentorTileState extends State<MentorTile> {
                                               fontSize: 17.h,
                                               fontWeight: FontWeight.w700),
                                     ),
-                                    if (widget.isExpanded)
-                                      SizedBox(
-                                        // color: Colors.amber,
-                                        width: 300.v,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () async {
-                                                    // final Email email = Email(
-                                                    //   body:
-                                                    //       'Download Islamic Event',
-                                                    //   subject: 'Download',
-                                                    //   recipients: [
-                                                    //     widget
-                                                    //         .memberdetail.email
-                                                    //   ],
-                                                    //   // cc: ['cc@example.com'],
-                                                    //   // bcc: ['bcc@example.com'],
-                                                    // );
-
-                                                    // try {
-                                                    //   await FlutterEmailSender
-                                                    //       .send(email);
-                                                    // } catch (error) {
-                                                    //   print(error);
-                                                    // }
-                                                    Get.find<
-                                                            InitialStatusController>()
-                                                        .sendSms(
-                                                            widget.memberdetail
-                                                                .phone,
-                                                            "");
-                                                  },
-                                                  child: Container(
-                                                    // width: 100.v,
-                                                    // height: 28.h,
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 5.v,
-                                                            vertical: 4),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5.v),
-                                                        color: theme.colorScheme
-                                                            .primary),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Send Message",
-                                                        style: TextStyle(
-                                                          fontSize: 10.v,
-                                                          color: appTheme.white,
-                                                          fontFamily: 'Inter',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () async {
-                                                    Get.find<
-                                                            InitialStatusController>()
-                                                        .whatsappLaunchURL(
-                                                            widget.memberdetail
-                                                                .phone);
-                                                  },
-                                                  child: appbarItemicon(
-                                                    height: 25.v,
-                                                    width: 25.v,
-                                                    icon:
-                                                        ImageConstant.whatsapp,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 4.v),
-                                                GestureDetector(
-                                                  onTap: () async {
-                                                    final Uri launchUri = Uri(
-                                                      scheme: 'tel',
-                                                      path: widget
-                                                          .memberdetail.phone,
-                                                    );
-                                                    await launchUrl(launchUri);
-                                                  },
-                                                  child: appbarItemicon(
-                                                    height: 25.v,
-                                                    width: 25.v,
-                                                    icon: ImageConstant.call,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 4.v),
-                                                InkWell(
-                                                  onTap: () {
-                                                    Share.share(widget
-                                                        .memberdetail.about);
-                                                  },
-                                                  child: appbarItemicon(
-                                                    height: 25.v,
-                                                    width: 25.v,
-                                                    icon: ImageConstant.share,
-                                                  ),
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return AlertDialog(
-                                                          title: const Text(
-                                                              'Mentor'),
-                                                          content: const Text(
-                                                              'Are you sure you want to delete?'),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop(); // Close the dialog
-                                                              },
-                                                              child: const Text(
-                                                                  'Cancel'),
-                                                            ),
-                                                            TextButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                Get.back();
-                                                                Get.find<
-                                                                        InitialStatusController>()
-                                                                    .deleteMentor(
-                                                                        widget
-                                                                            .memberdetail
-                                                                            .id);
-                                                              },
-                                                              child: const Text(
-                                                                  'Delete'),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                  child: const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(8.0),
-                                                    child: Icon(
-                                                      Icons.delete,
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      )
+                                    Text(
+                                      "Mazbi Scholars",
+                                      style: theme.textTheme.bodyLarge!
+                                          .copyWith(
+                                              color: appTheme.gray400,
+                                              fontSize: 13.h,
+                                              fontWeight: FontWeight.w400),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -446,6 +281,145 @@ class _MentorTileState extends State<MentorTile> {
                               ),
                             );
                           }),
+                    ),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.v, vertical: 6.v),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  // final Email email = Email(
+                                  //   body:
+                                  //       'Download Islamic Event',
+                                  //   subject: 'Download',
+                                  //   recipients: [
+                                  //     widget
+                                  //         .memberdetail.email
+                                  //   ],
+                                  //   // cc: ['cc@example.com'],
+                                  //   // bcc: ['bcc@example.com'],
+                                  // );
+
+                                  // try {
+                                  //   await FlutterEmailSender
+                                  //       .send(email);
+                                  // } catch (error) {
+                                  //   print(error);
+                                  // }
+                                  Get.find<InitialStatusController>()
+                                      .sendSms(widget.memberdetail.phone, "");
+                                },
+                                child: Container(
+                                  // width: 100.v,
+                                  // height: 28.h,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5.v, vertical: 4),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5.v),
+                                      color: theme.colorScheme.primary),
+                                  child: Center(
+                                    child: Text(
+                                      "Send Message",
+                                      style: TextStyle(
+                                        fontSize: 10.v,
+                                        color: appTheme.white,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  Get.find<InitialStatusController>()
+                                      .whatsappLaunchURL(
+                                          widget.memberdetail.phone);
+                                },
+                                child: appbarItemicon(
+                                  height: 25.v,
+                                  width: 25.v,
+                                  icon: ImageConstant.whatsapp,
+                                ),
+                              ),
+                              SizedBox(width: 4.v),
+                              GestureDetector(
+                                onTap: () async {
+                                  final Uri launchUri = Uri(
+                                    scheme: 'tel',
+                                    path: widget.memberdetail.phone,
+                                  );
+                                  await launchUrl(launchUri);
+                                },
+                                child: appbarItemicon(
+                                  height: 25.v,
+                                  width: 25.v,
+                                  icon: ImageConstant.call,
+                                ),
+                              ),
+                              SizedBox(width: 4.v),
+                              InkWell(
+                                onTap: () {
+                                  Share.share(widget.memberdetail.about);
+                                },
+                                child: appbarItemicon(
+                                  height: 25.v,
+                                  width: 25.v,
+                                  icon: ImageConstant.share,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Mentor'),
+                                        content: const Text(
+                                            'Are you sure you want to delete?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // Close the dialog
+                                            },
+                                            child: const Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              Get.back();
+                                              Get.find<
+                                                      InitialStatusController>()
+                                                  .deleteMentor(
+                                                      widget.memberdetail.id);
+                                            },
+                                            child: const Text('Delete'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       padding:
@@ -505,8 +479,9 @@ class featurewidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.v),
       height: height ?? 20.v,
-      width: width ?? 95.v,
+      // width: width ?? 120.v,
       decoration: decoration ??
           BoxDecoration(
               borderRadius: BorderRadius.circular(15.v),
@@ -516,7 +491,7 @@ class featurewidget extends StatelessWidget {
           title,
           style: theme.textTheme.bodyLarge!.copyWith(
               color: theme.colorScheme.primary,
-              fontSize: 13.h,
+              fontSize: 12.h,
               fontWeight: FontWeight.w500),
         ),
       ),

@@ -70,25 +70,12 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 20.h),
                     child: Column(
                       children: [
+                        SizedBox(height: 65.v),
                         CustomImageView(
                           imagePath: ImageConstant.logo,
                           width: 102.h,
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 1.h),
-                            child: Text(
-                              "Prophetic \nPath Danmark",
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyLarge!.copyWith(
-                                  color: appTheme.black900,
-                                  fontSize: 30.fSize,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 5.v),
+                        SizedBox(height: 15.v),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(

@@ -52,27 +52,6 @@ class _BooksScreenState extends State<BooksScreen> {
     }
   }
 
-  Future<void> downloadPdf(String url, String fileName) async {
-    try {
-      EasyLoading.show();
-      // Create the download directory
-      final directory = await getApplicationDocumentsDirectory();
-      final filePath = '${directory.path}/$fileName.pdf';
-
-      // Download the file
-      final dio = Dio();
-      await dio.download(url, filePath);
-
-      EasyLoading.dismiss();
-      // Notify user that the file has been downloaded
-      flutterToast("File downloaded to $filePath");
-
-      print('File downloaded to $filePath');
-    } catch (e) {
-      print('Download error: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,7 +110,8 @@ class _BooksScreenState extends State<BooksScreen> {
                                 child: GestureDetector(
                                   onTap: () {
                                     _initialStatusController.getPdfPath(
-                                        "${EnvironmentConstants.baseUrlforimage}${book.book}");
+                                        "${EnvironmentConstants.baseUrlforimage}${book.book}",
+                                        book.title);
                                   },
                                   child: Column(
                                     children: [
@@ -199,19 +179,6 @@ class _BooksScreenState extends State<BooksScreen> {
                                               ),
                                             ),
                                           ),
-                                          IconButton(
-                                              onPressed: () {
-                                                final pdfUrl =
-                                                    "${EnvironmentConstants.baseUrlforimage}${book.book}";
-                                                downloadPdf(pdfUrl,
-                                                    book.title); // Use the book's title as the filename
-                                              },
-                                              icon: Icon(
-                                                Icons
-                                                    .download_for_offline_outlined,
-                                                color:
-                                                    theme.colorScheme.primary,
-                                              ))
                                         ],
                                       ),
                                       SizedBox(

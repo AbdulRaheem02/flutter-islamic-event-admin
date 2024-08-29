@@ -16,6 +16,7 @@ class MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: appTheme.white,
       appBar: _buildAppBar(context),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 15.v),

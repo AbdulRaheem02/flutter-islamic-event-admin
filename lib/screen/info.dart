@@ -21,59 +21,6 @@ class infoPage extends StatefulWidget {
 
 class _ReviewPageState extends State<infoPage> {
   String message = 'Check out this cool content!';
-  void _shareToFacebook(String message) async {
-    final url =
-        'https://www.facebook.com/sharer/sharer.php?u=${Uri.encodeComponent(message)}';
-    if (await canLaunchUrlString(url)) {
-      await launchUrlString(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  void _shareToWhatsapp(String message) async {
-    final url = 'whatsapp://send?text=${Uri.encodeComponent(message)}';
-    if (await canLaunchUrlString(url)) {
-      await launchUrlString(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  void _shareToMessenger(String message) async {
-    final url = 'fb-messenger://share?link=${Uri.encodeComponent(message)}';
-    if (await canLaunchUrlString(url)) {
-      await launchUrlString(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  void _shareToTwitter(String message) async {
-    final url =
-        'https://twitter.com/intent/tweet?text=${Uri.encodeComponent(message)}';
-    if (await canLaunchUrlString(url)) {
-      await launchUrlString(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  void _shareToInstagram(String message) async {
-    // Instagram sharing might need an image or video
-    final url = 'instagram://share?text=${Uri.encodeComponent(message)}';
-    if (await canLaunchUrlString(url)) {
-      await launchUrlString(url);
-    } else {
-      // Fallback to general sharing if the scheme doesn't work
-      Share.share(message);
-    }
-  }
-
-  void _shareToTiktok(String message) async {
-    // TikTok doesn't have a direct URL scheme for sharing. Use general sharing.
-    Share.share(message);
-  }
 
   void _shareToYoutube(String message) async {
     // YouTube also doesn't have a direct URL scheme for sharing. Use general sharing.
@@ -90,13 +37,22 @@ class _ReviewPageState extends State<infoPage> {
   }
 
   final String loremText =
-      "Lorem ipsum dolor sit amet consectetur. Iaculis diam nec arcu ultricies. Lorem ipsum dolor sit amet consectetur. Iaculis diam nec arcu ultricies. Lorem ipsum dolor sit amet consectetur. Iaculis diam nec arcu ultricies. Lorem ipsum dolor sit amet consectetur. Iaculis diam nec arcu ultricies. ";
+      " Prophetic Path er en international organisation, der formidler budskabet om Islam igennem Koranen og Profeten Muhammad ﷺ Sunnah. ";
   bool isExpanded = false;
 
   void _toggleReadMore() {
     setState(() {
       isExpanded = !isExpanded;
     });
+  }
+
+  void _openLink(String url) async {
+    Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -136,21 +92,71 @@ class _ReviewPageState extends State<infoPage> {
           SizedBox(
             height: 10.h,
           ),
-
           Text(
-            isExpanded ? loremText : '${loremText.substring(0, 150)}...',
-            textAlign: TextAlign.justify,
+            // isExpanded ?
+            loremText,
+            // : '${loremText.substring(0, 150)}...',
+            textAlign: TextAlign.center,
+
             style: TextStyle(
-              fontSize: 16.v,
+              fontSize: 15.v,
               color: appTheme.blackText,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
             ),
           ),
-
-          TextButton(
-            onPressed: _toggleReadMore,
-            child: Text(isExpanded ? 'Read Less' : 'Read More'),
+          // TextButton(
+          //   onPressed: _toggleReadMore,
+          //   child: Text(isExpanded ? 'Read Less' : 'Read More'),
+          // ),
+          SizedBox(
+            height: 10.h,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  CustomImageView(
+                    onTap: () => _openLink(
+                        "https://www.facebook.com/propheticpathdanmark"),
+                    imagePath: ImageConstant.facebook,
+                    height: 60.h,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  CustomImageView(
+                    onTap: () => _openLink(
+                        "https://www.instagram.com/propheticpath_dk?igsh=MXJ2c2sycXg1aGdwbQ%3D%3D&utm_source=qr"),
+                    imagePath: ImageConstant.instagram,
+                    height: 60.h,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  CustomImageView(
+                    onTap: () => _openLink(
+                        "https://youtube.com/@propheticpathdanmark?si=NUDU33wqswAV7qyx"),
+                    imagePath: ImageConstant.youtube,
+                    height: 40.h,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  CustomImageView(
+                    onTap: () => _openLink(
+                        "https://www.tiktok.com/@propheticpath?_t=8pByV34EiTw&_r=1"),
+                    imagePath: ImageConstant.tiktok,
+                    height: 40.h,
+                  ),
+                ],
+              ),
+            ],
           ),
           SizedBox(
             height: 10.h,
@@ -172,6 +178,7 @@ class _ReviewPageState extends State<infoPage> {
           SizedBox(
             height: 10.h,
           ),
+
           Row(
             children: [
               Column(
@@ -216,147 +223,6 @@ class _ReviewPageState extends State<infoPage> {
           SizedBox(
             height: 30.h,
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     Column(
-          //       children: [
-          //         CustomImageView(
-          //           onTap: () => _shareToFacebook(message),
-          //           imagePath: ImageConstant.facebook,
-          //         ),
-          //   Text(
-          //     "Facebook",
-          //     style: TextStyle(
-          //       fontSize: 13.v,
-          //       color: appTheme.black900,
-          //       fontFamily: 'Inter',
-          //       fontWeight: FontWeight.w400,
-          //     ),
-          //   ),
-          // ],
-          //     ),
-          //     Column(
-          //       children: [
-          //         Column(
-          //           children: [
-          //             CustomImageView(
-          //               onTap: () => _shareToWhatsapp(message),
-          //               imagePath: ImageConstant.whatsapp,
-          //             ),
-          //             Text(
-          //               "Whatsapp",
-          //               style: TextStyle(
-          //                 fontSize: 13.v,
-          //                 color: appTheme.black900,
-          //                 fontFamily: 'Inter',
-          //                 fontWeight: FontWeight.w400,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //     Column(
-          //       children: [
-          //         CustomImageView(
-          //           onTap: () => _shareToMessenger(message),
-          //           imagePath: ImageConstant.messenger,
-          //         ),
-          //         Text(
-          //           "Messenger",
-          //           style: TextStyle(
-          //             fontSize: 13.v,
-          //             color: appTheme.black900,
-          //             fontFamily: 'Inter',
-          //             fontWeight: FontWeight.w400,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
-
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     Column(
-          //       children: [
-          //         CustomImageView(
-          //           onTap: () => _shareToTwitter(message),
-          //           imagePath: ImageConstant.twitter,
-          //         ),
-          //         Text(
-          //           "Twitter",
-          //           style: TextStyle(
-          //             fontSize: 13.v,
-          //             color: appTheme.black900,
-          //             fontFamily: 'Inter',
-          //             fontWeight: FontWeight.w400,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //     Column(
-          //       children: [
-          //         CustomImageView(
-          //           onTap: () => _shareToInstagram(message),
-          //           imagePath: ImageConstant.instagram,
-          //         ),
-          //         Text(
-          //           "Instagram",
-          //           style: TextStyle(
-          //             fontSize: 13.v,
-          //             color: appTheme.black900,
-          //             fontFamily: 'Inter',
-          //             fontWeight: FontWeight.w400,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //     Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         Container(
-          //           child: CustomImageView(
-          //             onTap: () => _shareToTiktok(message),
-          //             imagePath: ImageConstant.tiktok,
-          //             height: 40.h,
-          //           ),
-          //         ),
-          //         Padding(
-          //           padding: EdgeInsets.only(top: 10.v),
-          //           child: Text(
-          //             "Tiktok",
-          //             style: TextStyle(
-          //               fontSize: 13.v,
-          //               color: appTheme.black900,
-          //               fontFamily: 'Inter',
-          //               fontWeight: FontWeight.w400,
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //     Column(
-          //       children: [
-          //         CustomImageView(
-          //           onTap: () => _shareToYoutube(message),
-          //           imagePath: ImageConstant.youtube,
-          //         ),
-          //         Text(
-          //           "Youtube",
-          //           style: TextStyle(
-          //             fontSize: 13.v,
-          //             color: appTheme.black900,
-          //             fontFamily: 'Inter',
-          //             fontWeight: FontWeight.w400,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // )
         ],
       ),
     ));

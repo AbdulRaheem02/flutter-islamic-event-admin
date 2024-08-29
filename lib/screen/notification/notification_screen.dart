@@ -65,7 +65,9 @@ class NotificationScreen extends StatelessWidget {
                                                       notificationdetail.id!)
                                               .then((val) {
                                             _initialStatusController.getPdfPath(
-                                                "${EnvironmentConstants.baseUrlforimage}${_initialStatusController.bookbyId.first.book}");
+                                                "${EnvironmentConstants.baseUrlforimage}${_initialStatusController.bookbyId.first.book}",
+                                                _initialStatusController
+                                                    .bookbyId.first.title);
                                           });
                                         } else if (notificationdetail.type ==
                                             "project") {
