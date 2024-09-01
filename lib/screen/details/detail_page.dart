@@ -343,6 +343,14 @@ class _DetailScreenState extends State<DetailScreen> {
                                   .displaySmall
                                   ?.copyWith(fontSize: 12),
                             )),
+                            DataColumn(
+                                label: Text(
+                              'PHONE',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(fontSize: 12),
+                            )),
                           ],
                           rows: widget.eventdetail
                               .userGoing // Loops through dataColumnText, each iteration assigning the value to element
@@ -368,7 +376,18 @@ class _DetailScreenState extends State<DetailScreen> {
                                         //       ),
                                         // )),
                                         DataCell(Text(
-                                          " \$ ${element.amount}",
+                                          element.amount.toString() == "0"
+                                              ? "Free"
+                                              : " \$ ${element.amount}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge
+                                              ?.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                        )),
+                                        DataCell(Text(
+                                          "${element.phone}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayLarge

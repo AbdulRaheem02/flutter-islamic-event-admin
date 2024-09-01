@@ -18,7 +18,7 @@ class ApiBaseHelper {
     var options = BaseOptions(
       receiveTimeout: const Duration(seconds: ApiConstant.TIMEOUT),
       connectTimeout: const Duration(seconds: ApiConstant.TIMEOUT),
-      baseUrl: EnvironmentConstants.setEnvironment(Environment.PROD),
+      baseUrl: EnvironmentConstants.setEnvironment(Environment.DEV),
       responseType: ResponseType.json,
     );
     _dio = Dio(options);

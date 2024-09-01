@@ -288,7 +288,7 @@ class _DetailScreenState extends State<TripDetailScreen> {
                                     .textTheme
                                     .displaySmall
                                     ?.copyWith(
-                                      fontSize: 12,
+                                      fontSize: 7,
                                     ),
                               )),
                               DataColumn(
@@ -297,7 +297,7 @@ class _DetailScreenState extends State<TripDetailScreen> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .displaySmall
-                                    ?.copyWith(fontSize: 12),
+                                    ?.copyWith(fontSize: 7),
                               )),
                               DataColumn(
                                   label: Text(
@@ -305,7 +305,15 @@ class _DetailScreenState extends State<TripDetailScreen> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .displaySmall
-                                    ?.copyWith(fontSize: 12),
+                                    ?.copyWith(fontSize: 7),
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                'PHONE',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall
+                                    ?.copyWith(fontSize: 7),
                               )),
                             ],
                             rows: widget.tripdetail
@@ -320,7 +328,7 @@ class _DetailScreenState extends State<TripDetailScreen> {
                                                 .textTheme
                                                 .displayLarge
                                                 ?.copyWith(
-                                                  fontSize: 13,
+                                                  fontSize: 7,
                                                 ),
                                           )), //Extracting from Map element the value
 
@@ -330,7 +338,7 @@ class _DetailScreenState extends State<TripDetailScreen> {
                                                 .textTheme
                                                 .displayLarge
                                                 ?.copyWith(
-                                                  fontSize: 13,
+                                                  fontSize: 7,
                                                 ),
                                           )),
                                           DataCell(Text(
@@ -339,7 +347,16 @@ class _DetailScreenState extends State<TripDetailScreen> {
                                                 .textTheme
                                                 .displayLarge
                                                 ?.copyWith(
-                                                  fontSize: 13,
+                                                  fontSize: 7,
+                                                ),
+                                          )),
+                                          DataCell(Text(
+                                            "${element.phone}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge
+                                                ?.copyWith(
+                                                  fontSize: 7,
                                                 ),
                                           )),
                                         ],

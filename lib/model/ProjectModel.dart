@@ -123,15 +123,18 @@ class UserGoing {
     required this.userId,
     required this.amount,
     required this.id,
+    this.phone,
   });
   late final UserId userId;
   late final int amount;
+  String? phone;
 
   late final String id;
 
   UserGoing.fromJson(Map<String, dynamic> json) {
     userId = UserId.fromJson(json['userId']);
     amount = json['amount'];
+    phone = json['phone'] ?? "";
 
     id = json['_id'];
   }
@@ -140,7 +143,7 @@ class UserGoing {
     final data = <String, dynamic>{};
     data['userId'] = userId.toJson();
     data['amount'] = amount;
-
+    data['phone'] = phone;
     data['_id'] = id;
     return data;
   }
