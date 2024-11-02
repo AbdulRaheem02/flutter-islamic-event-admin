@@ -283,37 +283,21 @@ class _DetailScreenState extends State<TripDetailScreen> {
                             columns: [
                               DataColumn(
                                   label: Text(
-                                'PAYMENT',
+                                'NAME',
                                 style: Theme.of(context)
                                     .textTheme
                                     .displaySmall
                                     ?.copyWith(
-                                      fontSize: 7,
+                                      fontSize: 13,
                                     ),
                               )),
                               DataColumn(
                                   label: Text(
-                                'AMOUNT',
+                                'DETAIL',
                                 style: Theme.of(context)
                                     .textTheme
                                     .displaySmall
-                                    ?.copyWith(fontSize: 7),
-                              )),
-                              DataColumn(
-                                  label: Text(
-                                'PERSON',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall
-                                    ?.copyWith(fontSize: 7),
-                              )),
-                              DataColumn(
-                                  label: Text(
-                                'PHONE',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall
-                                    ?.copyWith(fontSize: 7),
+                                    ?.copyWith(fontSize: 13),
                               )),
                             ],
                             rows: widget.tripdetail
@@ -328,36 +312,254 @@ class _DetailScreenState extends State<TripDetailScreen> {
                                                 .textTheme
                                                 .displayLarge
                                                 ?.copyWith(
-                                                  fontSize: 7,
+                                                  fontSize: 13,
                                                 ),
                                           )), //Extracting from Map element the value
 
-                                          DataCell(Text(
-                                            " \$ ${element.amount}",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayLarge
-                                                ?.copyWith(
-                                                  fontSize: 7,
+                                          DataCell(InkWell(
+                                            onTap: () async {
+                                              await showModalBottomSheet(
+                                                  context: Get.context!,
+                                                  builder: (context) {
+                                                    return Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 10.v),
+                                                      width: double.infinity,
+                                                      child: Column(
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 15.h,
+                                                          ),
+                                                          Container(
+                                                            height: 5.h,
+                                                            width: 30.v,
+                                                            decoration: BoxDecoration(
+                                                                color: appTheme
+                                                                    .gray100,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10.h)),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10.h,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                "Name",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      15.v,
+                                                                  color: appTheme
+                                                                      .blackText,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                element.name ??
+                                                                    "",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      15.v,
+                                                                  color: appTheme
+                                                                      .blackText,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10.h,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                "Phone Number",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      15.v,
+                                                                  color: appTheme
+                                                                      .blackText,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                element.phone ??
+                                                                    "",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      15.v,
+                                                                  color: appTheme
+                                                                      .blackText,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10.h,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                "Email",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      15.v,
+                                                                  color: appTheme
+                                                                      .blackText,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                element.email ??
+                                                                    "",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      15.v,
+                                                                  color: appTheme
+                                                                      .blackText,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10.h,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                "Address",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      15.v,
+                                                                  color: appTheme
+                                                                      .blackText,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 260.v,
+                                                                child: Text(
+                                                                  maxLines: 10,
+                                                                  element.address ??
+                                                                      "",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15.v,
+                                                                    color: appTheme
+                                                                        .blackText,
+                                                                    fontFamily:
+                                                                        'Inter',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  });
+                                            },
+                                            child: Container(
+                                              height: 28.h,
+                                              padding: EdgeInsets.all(3.v),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.v),
+                                                  color: theme
+                                                      .colorScheme.primary),
+                                              child: Center(
+                                                child: Text(
+                                                  "View",
+                                                  style: TextStyle(
+                                                    fontSize: 12.v,
+                                                    color: appTheme.white,
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
                                                 ),
-                                          )),
-                                          DataCell(Text(
-                                            "${element.totalPerson}",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayLarge
-                                                ?.copyWith(
-                                                  fontSize: 7,
-                                                ),
-                                          )),
-                                          DataCell(Text(
-                                            "${element.phone}",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayLarge
-                                                ?.copyWith(
-                                                  fontSize: 7,
-                                                ),
+                                              ),
+                                            ),
                                           )),
                                         ],
                                       )),

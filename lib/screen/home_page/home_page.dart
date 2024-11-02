@@ -99,13 +99,13 @@ class _EventPageScreenState extends State<EventPageScreen> {
                     children: [
                       Row(
                         children: [
-                          SizedBox(
-                            height: 40.v,
-                            width: 150.v,
-                            child: CustomImageView(
-                              imagePath: ImageConstant.islamicAppbar,
-                              fit: BoxFit.fill,
-                            ),
+                          Text(
+                            "Prophetic path",
+                            style: TextStyle(
+                                fontSize: 26.v,
+                                color: appTheme.black900,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w600),
                           ),
 //                           SizedBox(width: 7.v),
                           // Obx(() => Text(
@@ -132,9 +132,6 @@ class _EventPageScreenState extends State<EventPageScreen> {
                                   });
                             },
                             child: appbarItemicon(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: theme.colorScheme.primary),
                               icon: ImageConstant.info,
                             ),
                           ),
@@ -425,7 +422,8 @@ class CustomTripCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5.v),
 
-      width: 348.v,
+      width: MediaQuery.of(context).size.width * 0.95,
+
       // height: 180.h,
       child: Column(
         children: [
@@ -433,7 +431,7 @@ class CustomTripCard extends StatelessWidget {
             alignment: AlignmentDirectional.topEnd,
             children: [
               Container(
-                width: 348.v,
+                width: MediaQuery.of(context).size.width * 0.95,
                 height: 157.h,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.v),
@@ -593,7 +591,8 @@ class CustomEvent extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5.v),
 
-      width: 348.v,
+      width: MediaQuery.of(context).size.width * 0.95,
+
       // height: 180.h,
       child: Column(
         children: [
@@ -601,7 +600,7 @@ class CustomEvent extends StatelessWidget {
             alignment: AlignmentDirectional.topEnd,
             children: [
               Container(
-                width: 348.v,
+                width: MediaQuery.of(context).size.width * 0.95,
                 height: 157.h,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.v),

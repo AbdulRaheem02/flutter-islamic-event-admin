@@ -206,20 +206,15 @@ class _MentorTileState extends State<MentorTile> {
                               //   fit: BoxFit.fill,
                               // ),
 
-                              CircleAvatar(
-                                child: Circleimage(
-                                  onTap: () {
-                                    Get.log("omnta");
-                                  },
-                                  imagePath:
-                                      "${EnvironmentConstants.baseUrlforimage}${widget.memberdetail.image}",
-                                  height: 90.adaptSize,
-                                  width: 90.adaptSize,
-                                  margin: EdgeInsets.only(
-                                    top: 2.v,
-                                    bottom: 2.v,
-                                  ),
-                                ),
+                              Container(
+                                height: 50.h,
+                                width: 50.h,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(
+                                            "${EnvironmentConstants.baseUrlforimage}${widget.memberdetail.image}"))),
                               ),
                               SizedBox(
                                 width: 5.v,
@@ -236,7 +231,7 @@ class _MentorTileState extends State<MentorTile> {
                                       style: theme.textTheme.bodyLarge!
                                           .copyWith(
                                               color: appTheme.blackheading,
-                                              fontSize: 17.h,
+                                              fontSize: 15.h,
                                               fontWeight: FontWeight.w700),
                                     ),
                                     Text(

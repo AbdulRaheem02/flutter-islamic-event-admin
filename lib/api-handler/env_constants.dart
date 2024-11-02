@@ -22,9 +22,9 @@ class EnvironmentConstants {
         baseUrlforimage = "http://13.127.226.157:3535";
         break;
       case Environment.STAGING:
-        socket = "https://f66468x0-5050.inc1.devtunnels.ms/";
-        _config = "https://f66468x0-5050.inc1.devtunnels.ms/api/v1/";
-        baseUrlforimage = "https://f66468x0-5050.inc1.devtunnels.ms";
+        socket = "https://h9rh5km3-5050.inc1.devtunnels.ms/";
+        _config = "https://h9rh5km3-5050.inc1.devtunnels.ms/api/v1/";
+        baseUrlforimage = "https://h9rh5km3-5050.inc1.devtunnels.ms";
 
         break;
       case Environment.DEV:

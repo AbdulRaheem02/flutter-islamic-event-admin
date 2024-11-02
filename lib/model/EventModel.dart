@@ -127,17 +127,22 @@ class OrganiserId {
 }
 
 class UserGoing {
-  UserGoing({
-    required this.userId,
-    required this.amount,
-    required this.totalPerson,
-    required this.id,
-    this.phone,
-  });
+  UserGoing(
+      {required this.userId,
+      required this.amount,
+      required this.totalPerson,
+      required this.id,
+      this.phone,
+      this.email,
+      this.address,
+      this.name});
   late final UserId userId;
   late final int amount;
   late final int totalPerson;
   String? phone;
+  String? email;
+  String? address;
+  String? name;
 
   late final String id;
 
@@ -148,6 +153,9 @@ class UserGoing {
 
     totalPerson = json['totalPerson'];
     id = json['_id'];
+    email = json['email'];
+    address = json['address'];
+    name = json['name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -158,6 +166,10 @@ class UserGoing {
 
     data['totalPerson'] = totalPerson;
     data['_id'] = id;
+    data['email'] = email;
+    data['address'] = address;
+    data['name'] = name;
+
     return data;
   }
 }

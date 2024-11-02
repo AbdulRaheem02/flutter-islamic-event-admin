@@ -99,7 +99,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                               height: 15,
                             ),
                             SizedBox(
-                              width: 348.v,
+                              width: MediaQuery.of(context).size.width * 0.95,
                               child: Column(
                                 children: [
                                   InkWell(
@@ -117,7 +117,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                       // Get.to(() => const DonationDetailScreen());
                                     },
                                     child: Container(
-                                      width: 348.v,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.95,
                                       height: 157.h,
                                       decoration: BoxDecoration(
                                           borderRadius:
