@@ -27,7 +27,9 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.islamicevent.adminapp"
-    compileSdk 34
+    // compileSdk 34
+    compileSdk = flutter.compileSdkVersion
+
     ndkVersion flutter.ndkVersion
 
     compileOptions {
