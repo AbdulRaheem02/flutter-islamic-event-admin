@@ -80,7 +80,7 @@
 import 'package:dio/dio.dart';
 import 'dart:math' as math;
 import 'dart:typed_data';
-import 'package:connectivity_plus/connectivity_plus.dart';
+// import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../custom_widgets/toast.dart';
@@ -137,11 +137,11 @@ class LoggingInterceptors extends Interceptor {
       this.logPrint = print});
 
   Future<bool> _isInternetConnected() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      flutterToast(EnvironmentConstants.internetNotAvailableMessage);
-      return false;
-    }
+    // var connectivityResult = await Connectivity().checkConnectivity();
+    // if (connectivityResult == ConnectivityResult.none) {
+    //   flutterToast(EnvironmentConstants.internetNotAvailableMessage);
+    //   return false;
+    // }
     return true;
   }
 
