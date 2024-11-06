@@ -39,7 +39,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   dotted_border: ^2.1.0
   intl: ^0.19.0
-  # connectivity_plus: ^6.1.0
+  connectivity_plus: ^6.0.2
   change_app_package_name: ^1.1.0
   shared_preferences: ^2.2.3
   fluttertoast: ^8.2.5
