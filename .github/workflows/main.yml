@@ -38,14 +38,11 @@ jobs:
           flutter clean
           flutter pub get
 
-      # Step 4: Build APK (Temporary Minimal Build)
-      - name: Build APK
-        run: |
-          flutter build apk --release --split-per-abi
-
       # Build iOS app without code signing and package it
       - name: Build iOS App
         run: |
+          cd ios
+          pod install
           flutter build ios --no-codesign
           cd build/ios/iphoneos
           mkdir Payload
