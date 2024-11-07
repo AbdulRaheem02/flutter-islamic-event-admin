@@ -41,6 +41,8 @@ jobs:
       # Build iOS app without code signing and package it
       - name: Build iOS App
         run: |
+          cd ios
+          pod install
           flutter build ios --no-codesign
           cd build/ios/iphoneos
           mkdir Payload
