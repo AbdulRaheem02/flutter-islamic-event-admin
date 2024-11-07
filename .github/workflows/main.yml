@@ -32,9 +32,15 @@ jobs:
           architecture: x64
 
       # Install dependencies and build APK for Android
+            # Step 3: Flutter Clean and Dependency Install
+      - name: Flutter clean and pub get
+        run: |
+          flutter clean
+          flutter pub get
+
+      # Step 4: Build APK (Temporary Minimal Build)
       - name: Build APK
         run: |
-          flutter pub get
           flutter build apk --release --split-per-abi
 
       # Build iOS app without code signing and package it
