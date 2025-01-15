@@ -122,7 +122,7 @@ class _MentorListPageState extends State<MentorListPage> {
       leadingWidth: 40.h,
       centerTitle: true,
       title: AppbarTitle(
-        text: "Members",
+        text: "Mentors",
       ),
       styleType: Style.bgFill,
     );
@@ -226,13 +226,18 @@ class _MentorTileState extends State<MentorTile> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      widget.memberdetail.fullname,
-                                      style: theme.textTheme.bodyLarge!
-                                          .copyWith(
-                                              color: appTheme.blackheading,
-                                              fontSize: 15.h,
-                                              fontWeight: FontWeight.w700),
+                                    SizedBox(
+                                      width: 210.v,
+                                      child: Text(
+                                        widget.memberdetail.fullname,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: theme.textTheme.bodyLarge!
+                                            .copyWith(
+                                                color: appTheme.blackheading,
+                                                fontSize: 15.h,
+                                                fontWeight: FontWeight.w700),
+                                      ),
                                     ),
                                     Text(
                                       "Mazbi Scholars",

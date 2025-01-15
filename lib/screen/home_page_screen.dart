@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                   width: width * 0.06,
                 ),
               ),
-              label: 'Projects',
+              label: 'Projekter',
             ),
             BottomNavigationBarItem(
               icon: ColorFiltered(
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                   width: width * 0.06,
                 ),
               ),
-              label: 'Books',
+              label: 'Bøger',
             ),
             BottomNavigationBarItem(
               icon: ColorFiltered(

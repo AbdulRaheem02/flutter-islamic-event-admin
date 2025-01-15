@@ -192,7 +192,7 @@ class _AddBookState extends State<AddBook> {
                       flutterToast("Please Upload Pdf");
                     }
                   },
-                  text: "Add Book",
+                  text: "Add Bøger",
                   width: 200.v,
                   buttonTextStyle: CustomTextStyles.bodySmallOnPrimary,
                 ),

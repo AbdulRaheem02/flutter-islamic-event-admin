@@ -69,7 +69,7 @@ class _BooksScreenState extends State<BooksScreen> {
             Row(
               children: [
                 Text(
-                  "Islamic Books",
+                  "Islamic Bøger",
                   style: TextStyle(
                     fontSize: 15.v,
                     color: appTheme.blackheading,
@@ -215,7 +215,7 @@ class _BooksScreenState extends State<BooksScreen> {
       leadingWidth: 40.h,
       centerTitle: true,
       title: AppbarTitle(
-        text: "Books",
+        text: "Bøger",
       ),
       styleType: Style.bgFill,
     );

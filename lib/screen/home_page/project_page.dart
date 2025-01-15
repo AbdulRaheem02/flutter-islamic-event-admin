@@ -248,7 +248,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       leadingWidth: 40.h,
       centerTitle: true,
       title: AppbarTitle(
-        text: "Projects",
+        text: "Projekter",
       ),
       styleType: Style.bgFill,
     );

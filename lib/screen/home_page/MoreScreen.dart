@@ -47,7 +47,7 @@ class MoreScreen extends StatelessWidget {
                     ));
               },
               title: Text(
-                "Add Trip",
+                "Add Ture",
                 style: theme.textTheme.bodyLarge!.copyWith(
                     color: appTheme.black900,
                     fontSize: 15.fSize,
@@ -63,7 +63,7 @@ class MoreScreen extends StatelessWidget {
                 Get.to(() => AddEvent(isProject: true));
               },
               title: Text(
-                "Add Project",
+                "Add Projekter",
                 style: theme.textTheme.bodyLarge!.copyWith(
                     color: appTheme.black900,
                     fontSize: 15.fSize,
@@ -95,7 +95,7 @@ class MoreScreen extends StatelessWidget {
                 Get.to(() => const AddBook());
               },
               title: Text(
-                "Add Book",
+                "Add Bøger",
                 style: theme.textTheme.bodyLarge!.copyWith(
                     color: appTheme.black900,
                     fontSize: 15.fSize,

@@ -318,7 +318,7 @@ class _EventPageScreenState extends State<EventPageScreen> {
                                   color: appTheme.white),
                               child: Center(
                                 child: Text(
-                                  "Trips",
+                                  "Ture",
                                   // +"(${_initialStatusController.alltriplist.length})",
                                   style: TextStyle(
                                     fontSize: selectedIndex == 2 ? 16.v : 13.v,
@@ -702,7 +702,7 @@ class CustomEvent extends StatelessWidget {
                           color: theme.colorScheme.primary),
                       child: Center(
                         child: Text(
-                          "View Detail",
+                          "Se detaljer",
                           style: TextStyle(
                             fontSize: 12.v,
                             color: appTheme.white,
